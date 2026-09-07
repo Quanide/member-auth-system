@@ -1,0 +1,80 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  backend:
+    name: 后端测试（PHP ${{ matrix.php }}）
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        # 8.2 是 composer.json 宣告的下限，8.3 是线上实际版本，两个都要过
+        php: ['8.2', '8.3']
+
+    defaults:
+      run:
+        working-directory: api
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 安装 PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          # gd 供头像裁切，sqlite 供测试用的记忆体资料库
+          extensions: mbstring, pdo_sqlite, sqlite3, gd, bcmath, intl, zip
+          coverage: none
+
+      - name: 快取 Composer 依赖
+        uses: actions/cache@v4
+        with:
+          path: ~/.composer/cache
+          key: composer-${{ matrix.php }}-${{ hashFiles('api/composer.lock') }}
+          restore-keys: composer-${{ matrix.php }}-
+
+      - name: 安装依赖
+        run: composer install --prefer-dist --no-interaction --no-progress
+
+      - name: 准备环境
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+
+      - name: 程式码风格检查
+        run: vendor/bin/pint --test
+
+      - name: 执行测试
+        run: php artisan test
+
+  frontend:
+    name: 前端型别检查与建置
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: web
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 安装 Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - name: 安装依赖
+        run: npm ci
+
+      - name: TypeScript 型别检查
+        run: npm run type-check
+
+      - name: 建置
+        run: npm run build
