@@ -260,6 +260,29 @@ body {
   overflow-x: auto;
 }
 
+// ── 描述列表 ──────────────────────────────────────────
+// 标签栏宽度由内容自适应，窄容器里「會員編號」这类三四字标签
+// 会被挤成两行。锁定一个不换行的最小宽度，整份列表才对得齐。
+.el-descriptions {
+  .el-descriptions__label {
+    white-space: nowrap;
+    min-width: 76px;
+    vertical-align: middle;
+  }
+
+  .el-descriptions__content {
+    word-break: break-all;
+    vertical-align: middle;
+  }
+
+  // border 模式下标签格底色淡一点，与内容区分开
+  .el-descriptions__cell.is-bordered-label {
+    background: $bg-subtle !important;
+    color: $text-muted !important;
+    font-weight: 500;
+  }
+}
+
 // ── 通用工具类 ────────────────────────────────────────
 
 .text-gradient {

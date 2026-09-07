@@ -124,7 +124,7 @@
       <el-card shadow="never" class="meta-card">
         <template #header>帳號資訊</template>
 
-        <el-descriptions :column="1" border size="small">
+        <el-descriptions :column="1" border size="small" label-width="76px">
           <el-descriptions-item label="信箱">
             <div class="email-cell">
               <span>{{ auth.user?.email }}</span>
@@ -340,6 +340,7 @@ onMounted(reset)
   color: $text-muted;
   text-align: center;
   line-height: 1.6;
+  max-width: 220px;
 }
 
 .form-grid {

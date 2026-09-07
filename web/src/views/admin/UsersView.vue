@@ -130,7 +130,7 @@
     <!-- 會員詳情 -->
     <el-drawer v-model="detailVisible" size="480px" :title="detail?.user.display_name ?? '會員詳情'">
       <div v-if="detail" v-loading="detailLoading">
-        <el-descriptions :column="1" border size="small">
+        <el-descriptions :column="1" border size="small" label-width="92px">
           <el-descriptions-item label="信箱">{{ detail.user.email }}</el-descriptions-item>
           <el-descriptions-item label="會員編號">#{{ detail.user.id }}</el-descriptions-item>
           <el-descriptions-item label="姓名">{{ detail.user.name }}</el-descriptions-item>
