@@ -1,0 +1,49 @@
+// ============================================================
+// 设计 Token — 蓝紫科技主题
+// 沿用「奇计智语」后台的视觉语言：靛蓝主色 + 深色侧栏 + 浅灰紫底
+// ============================================================
+
+// ── 品牌色 ──
+$brand-primary: #6366f1;
+$brand-secondary: #8b5cf6;
+$brand-light: #818cf8;
+$brand-dark: #4f52c1;
+$brand-gradient: linear-gradient(135deg, #6366f1, #8b5cf6);
+
+// ── 中性色阶 ──
+$text-title: #1d2129; // 标题
+$text-body: #4e5969; // 正文
+$text-muted: #86909c; // 次要说明
+$text-faint: #c9cdd4; // 占位、禁用
+
+// ── 背景与描边 ──
+$bg-page: #f0f1f8; // 页面底色
+$bg-card: #ffffff;
+$bg-subtle: #f7f7fc; // 表头、hover
+$bg-tint: #f5f4ff; // 主色淡底
+$border-base: #ecedf5;
+$border-light: #f2f3f5;
+$border-tint: #ede9fe;
+
+// ── 侧边栏（深色）──
+$sidebar-bg: #13141f;
+$sidebar-border: rgba(255, 255, 255, 0.07);
+$sidebar-text: rgba(255, 255, 255, 0.52);
+$sidebar-text-hover: rgba(255, 255, 255, 0.86);
+
+// ── 语义色 ──
+$success: #00b42a;
+$warning: #ff7d00;
+$danger: #f53f3f;
+
+// ── 尺寸 ──
+$radius-sm: 8px;
+$radius-md: 10px;
+$radius-lg: 14px;
+$sidebar-width: 220px;
+$sidebar-collapsed: 58px;
+$topbar-height: 60px;
+
+// ── 阴影 ──
+$shadow-card: 0 2px 8px rgba(99, 102, 241, 0.06);
+$shadow-float: 0 8px 24px rgba(99, 102, 241, 0.12);

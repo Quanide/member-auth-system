@@ -1,0 +1,35 @@
+# 依赖
+/api/vendor/
+/web/node_modules/
+
+# 建置产物
+/web/dist/
+/api/public/assets/
+/api/public/index.html
+/api/public/hot
+/api/public/storage
+
+# 环境与机密
+/api/.env
+/api/.env.*
+!/api/.env.example
+
+# 执行期档案
+/api/storage/*.key
+/api/storage/pail
+/api/storage/logs/*
+/api/storage/framework/cache/data/*
+/api/storage/framework/sessions/*
+/api/storage/framework/testing/*
+/api/storage/framework/views/*
+/api/bootstrap/cache/*.php
+/api/database/*.sqlite
+/api/database/*.sqlite-journal
+/api/.phpunit.result.cache
+
+# 编辑器与系统
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.log
