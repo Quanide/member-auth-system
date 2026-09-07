@@ -33,6 +33,9 @@ final class UserResource extends JsonResource
             'bio' => $this->bio,
             'avatar_url' => $this->avatarUrl(),
 
+            'two_factor_enabled' => $this->hasTwoFactorEnabled(),
+            'recovery_codes_remaining' => $this->recoveryCodesRemaining(),
+
             'role' => $this->role->value,
             'role_label' => $this->role->label(),
             'status' => $this->status->value,

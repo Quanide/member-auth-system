@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\EnsureUserIsAdmin;
 use App\Support\ApiResponse;
 use App\Support\ErrorCode;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -28,6 +29,10 @@ return Application::configure(basePath: dirname(__DIR__))
         // 部署在 Nginx 反代之后，需信任代理头才能拿到真实客户端 IP 与 https scheme。
         // 生产环境应把 '*' 收窄为反代的内网地址段。
         $middleware->trustProxies(at: '*');
+
+        $middleware->alias([
+            'admin' => EnsureUserIsAdmin::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(

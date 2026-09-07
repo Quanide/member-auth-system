@@ -60,13 +60,16 @@ final class AuthService
     }
 
     /**
-     * 登入。
+     * 验证帐号密码，但**不建立会话**。
+     *
+     * 与 completeLogin() 分开是为了塞进双因素这一步：
+     * 密码对了只代表通过第一关，启用 2FA 的帐号还要再验一次验证码。
      *
      * 防爆破分两层：
      *  1) 路由上的 throttle middleware 按 IP + 邮箱限流，挡住高频扫号
      *  2) 这里按帐号累计失败次数并锁定，换 IP 也绕不过
      */
-    public function login(string $email, string $password, bool $remember = false): User
+    public function attempt(string $email, string $password): User
     {
         $email = mb_strtolower(trim($email));
         $user = User::where('email', $email)->first();
@@ -99,9 +102,16 @@ final class AuthService
             );
         }
 
-        $this->markLoginSuccess($user, $remember);
-
         return $user;
+    }
+
+    /**
+     * 完成登入：建立会话并记录轨迹。
+     * 未启用 2FA 时紧接在 attempt() 之后呼叫；启用时则在验证码通过后才呼叫。
+     */
+    public function completeLogin(User $user, bool $remember = false): void
+    {
+        $this->markLoginSuccess($user, $remember);
     }
 
     /** 失败计数 +1，超阈值则锁定 */

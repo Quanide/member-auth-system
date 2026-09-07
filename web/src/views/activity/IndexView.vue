@@ -87,6 +87,7 @@ import { RefreshCw } from 'lucide-vue-next'
 import { profileApi } from '@/api/profile'
 import { ApiError } from '@/api/client'
 import { formatDateTime, fromNow } from '@/utils/format'
+import { describeMeta, shortUserAgent, tagType } from '@/utils/audit'
 import type { AuditLog, Pagination } from '@/types'
 
 const items = ref<AuditLog[]>([])
@@ -95,80 +96,6 @@ const filterAction = ref<string>()
 const loading = ref(false)
 
 const pagination = ref<Pagination>({ total: 0, per_page: 20, current_page: 1, last_page: 1 })
-
-function tagType(level: string): 'success' | 'warning' | 'danger' | 'info' {
-  return (['success', 'warning', 'danger', 'info'] as const).includes(
-    level as 'success' | 'warning' | 'danger' | 'info',
-  )
-    ? (level as 'success' | 'warning' | 'danger' | 'info')
-    : 'info'
-}
-
-/** UA 字串太长，列表里只显示能辨认装置的关键片段 */
-function shortUserAgent(ua: string | null): string {
-  if (!ua) return '—'
-
-  const os = /Windows/.test(ua)
-    ? 'Windows'
-    : /iPhone/.test(ua)
-      ? 'iPhone'
-      : /iPad/.test(ua)
-        ? 'iPad'
-        : /Android/.test(ua)
-          ? 'Android'
-          : /Mac OS X/.test(ua)
-            ? 'macOS'
-            : /Linux/.test(ua)
-              ? 'Linux'
-              : '未知系统'
-
-  const browser = /Edg\//.test(ua)
-    ? 'Edge'
-    : /Chrome\//.test(ua) && !/Chromium/.test(ua)
-      ? 'Chrome'
-      : /Firefox\//.test(ua)
-        ? 'Firefox'
-        : /Safari\//.test(ua) && !/Chrome/.test(ua)
-          ? 'Safari'
-          : '未知浏览器'
-
-  return `${os} · ${browser}`
-}
-
-/** 把后端存的 meta 翻成人看得懂的一句话 */
-function describeMeta(meta: Record<string, unknown> | null): string {
-  if (!meta) return '—'
-
-  if (Array.isArray(meta.fields)) {
-    const labels: Record<string, string> = {
-      name: '姓名',
-      nickname: '昵称',
-      phone: '手机',
-      birthday: '生日',
-      gender: '性别',
-      bio: '简介',
-    }
-
-    return '修改了：' + meta.fields.map((f) => labels[String(f)] ?? String(f)).join('、')
-  }
-
-  if (typeof meta.reason === 'string') {
-    const reasons: Record<string, string> = {
-      bad_password: '密码错误',
-      user_not_found: '帐号不存在',
-      locked: '帐号锁定中',
-      disabled: '帐号已停权',
-    }
-
-    return reasons[meta.reason] ?? meta.reason
-  }
-
-  if (typeof meta.new_email === 'string') return `新邮箱：${meta.new_email}`
-  if (typeof meta.locked_until === 'string') return '帐号已被暂时锁定'
-  if (typeof meta.count === 'number') return `共 ${meta.count} 个装置`
-
-  return '—'
-}
 
 async function load(page = 1): Promise<void> {
   loading.value = true

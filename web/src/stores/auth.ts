@@ -12,6 +12,8 @@ export const useAuthStore = defineStore('auth', () => {
 
   const isAuthenticated = computed(() => user.value !== null)
   const emailVerified = computed(() => user.value?.email_verified === true)
+  const isAdmin = computed(() => user.value?.role === 'admin')
+  const twoFactorEnabled = computed(() => user.value?.two_factor_enabled === true)
 
   /** 应用启动时用 Cookie 换回当前用户；401 属预期结果，不当错误处理 */
   async function bootstrap(): Promise<void> {
@@ -78,6 +80,8 @@ export const useAuthStore = defineStore('auth', () => {
     loading,
     isAuthenticated,
     emailVerified,
+    isAdmin,
+    twoFactorEnabled,
     bootstrap,
     login,
     register,

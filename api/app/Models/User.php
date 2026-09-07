@@ -40,6 +40,8 @@ class User extends Authenticatable implements MustVerifyEmailContract
     protected $hidden = [
         'password',
         'remember_token',
+        'two_factor_secret',
+        'two_factor_recovery_codes',
     ];
 
     protected function casts(): array
@@ -52,6 +54,10 @@ class User extends Authenticatable implements MustVerifyEmailContract
             'password' => 'hashed',
             'role' => UserRole::class,
             'status' => UserStatus::class,
+            'two_factor_confirmed_at' => 'datetime',
+            // 加密储存：资料库外泄也无法拿去产生有效的 TOTP 验证码
+            'two_factor_secret' => 'encrypted',
+            'two_factor_recovery_codes' => 'encrypted:array',
         ];
     }
 
@@ -114,6 +120,20 @@ class User extends Authenticatable implements MustVerifyEmailContract
         }
 
         return max(1, (int) Carbon::now()->diffInSeconds($this->locked_until, absolute: true));
+    }
+
+    /** 是否已完成双因素绑定（产生密钥但没确认不算） */
+    public function hasTwoFactorEnabled(): bool
+    {
+        return $this->two_factor_confirmed_at !== null && $this->two_factor_secret !== null;
+    }
+
+    /** 还剩几组恢复码可用 */
+    public function recoveryCodesRemaining(): int
+    {
+        return is_array($this->two_factor_recovery_codes)
+            ? count($this->two_factor_recovery_codes)
+            : 0;
     }
 
     public function canLogin(): bool

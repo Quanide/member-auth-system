@@ -30,10 +30,21 @@
 </template>
 
 <script setup lang="ts">
-import type { Component } from 'vue'
-import { Activity, LayoutDashboard, Shield, UserCog } from 'lucide-vue-next'
+import { computed, type Component } from 'vue'
+import {
+  Activity,
+  BarChart3,
+  LayoutDashboard,
+  ScrollText,
+  Shield,
+  UserCog,
+  Users,
+} from 'lucide-vue-next'
+import { useAuthStore } from '@/stores/auth'
 
 defineProps<{ collapsed: boolean }>()
+
+const auth = useAuthStore()
 
 const emit = defineEmits<{ navigate: [] }>()
 
@@ -43,20 +54,37 @@ interface MenuItem {
   icon: Component
 }
 
-const sections: Array<{ label: string; items: MenuItem[] }> = [
-  {
-    label: '总览',
-    items: [{ name: 'dashboard', label: '会员总览', icon: LayoutDashboard }],
-  },
-  {
-    label: '帐号管理',
-    items: [
-      { name: 'profile', label: '会员资料', icon: UserCog },
-      { name: 'security', label: '帐号安全', icon: Shield },
-      { name: 'activity', label: '操作纪录', icon: Activity },
-    ],
-  },
-]
+// 管理端选单只对 admin 显示；这是体验层的处理，
+// 一般会员就算手动打 URL，后端 middleware 一样会挡下来。
+const sections = computed<Array<{ label: string; items: MenuItem[] }>>(() => {
+  const base = [
+    {
+      label: '总览',
+      items: [{ name: 'dashboard', label: '会员总览', icon: LayoutDashboard }],
+    },
+    {
+      label: '帐号管理',
+      items: [
+        { name: 'profile', label: '会员资料', icon: UserCog },
+        { name: 'security', label: '帐号安全', icon: Shield },
+        { name: 'activity', label: '操作纪录', icon: Activity },
+      ],
+    },
+  ]
+
+  if (auth.isAdmin) {
+    base.push({
+      label: '系统管理',
+      items: [
+        { name: 'admin-dashboard', label: '数据看板', icon: BarChart3 },
+        { name: 'admin-users', label: '会员管理', icon: Users },
+        { name: 'admin-audit-logs', label: '全站稽核', icon: ScrollText },
+      ],
+    })
+  }
+
+  return base
+})
 
 function handleClick(navigate: () => void): void {
   navigate()

@@ -68,6 +68,26 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@/views/activity/IndexView.vue'),
         meta: { title: '操作纪录' },
       },
+
+      // ── 管理端：路由守卫挡一层，后端 middleware 再挡一层 ──
+      {
+        path: 'admin/dashboard',
+        name: 'admin-dashboard',
+        component: () => import('@/views/admin/DashboardView.vue'),
+        meta: { title: '数据看板', requiresAdmin: true },
+      },
+      {
+        path: 'admin/users',
+        name: 'admin-users',
+        component: () => import('@/views/admin/UsersView.vue'),
+        meta: { title: '会员管理', requiresAdmin: true },
+      },
+      {
+        path: 'admin/audit-logs',
+        name: 'admin-audit-logs',
+        component: () => import('@/views/admin/AuditLogsView.vue'),
+        meta: { title: '全站稽核', requiresAdmin: true },
+      },
     ],
   },
   {
@@ -102,6 +122,11 @@ router.beforeEach(async (to) => {
   }
 
   if (to.meta.guestOnly && auth.isAuthenticated) {
+    return { name: 'dashboard' }
+  }
+
+  // 前端守卫只是体验优化，真正的权限边界在后端 middleware
+  if (to.meta.requiresAdmin && !auth.isAdmin) {
     return { name: 'dashboard' }
   }
 

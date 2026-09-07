@@ -12,6 +12,8 @@ export interface User {
   gender: 'male' | 'female' | 'other' | null
   bio: string | null
   avatar_url: string | null
+  two_factor_enabled: boolean
+  recovery_codes_remaining: number
   role: string
   role_label: string
   status: string

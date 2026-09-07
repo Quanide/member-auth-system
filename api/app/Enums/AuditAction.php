@@ -26,6 +26,12 @@ enum AuditAction: string
     case EmailChangeRequested = 'email_change_requested';
     case EmailChanged = 'email_changed';
 
+    case TwoFactorEnabled = 'two_factor_enabled';
+    case TwoFactorDisabled = 'two_factor_disabled';
+    case TwoFactorChallengeFailed = 'two_factor_challenge_failed';
+    case TwoFactorRecoveryUsed = 'two_factor_recovery_used';
+    case TwoFactorRecoveryRegenerated = 'two_factor_recovery_regenerated';
+
     case SessionRevoked = 'session_revoked';
     case AllSessionsRevoked = 'all_sessions_revoked';
     case AccountDeleted = 'account_deleted';
@@ -48,6 +54,11 @@ enum AuditAction: string
             self::AvatarRemoved => '移除头像',
             self::EmailChangeRequested => '申请变更邮箱',
             self::EmailChanged => '邮箱变更完成',
+            self::TwoFactorEnabled => '启用双因素认证',
+            self::TwoFactorDisabled => '关闭双因素认证',
+            self::TwoFactorChallengeFailed => '双因素验证失败',
+            self::TwoFactorRecoveryUsed => '使用恢复码登入',
+            self::TwoFactorRecoveryRegenerated => '重新产生恢复码',
             self::SessionRevoked => '登出指定装置',
             self::AllSessionsRevoked => '登出所有装置',
             self::AccountDeleted => '注销帐号',
@@ -58,10 +69,14 @@ enum AuditAction: string
     public function level(): string
     {
         return match ($this) {
-            self::LoginFailed, self::AccountLocked, self::AccountDeleted => 'danger',
+            self::LoginFailed, self::AccountLocked, self::AccountDeleted,
+            self::TwoFactorChallengeFailed => 'danger',
             self::PasswordChanged, self::PasswordResetCompleted, self::EmailChanged,
-            self::SessionRevoked, self::AllSessionsRevoked => 'warning',
-            self::LoginSuccess, self::Register, self::EmailVerified => 'success',
+            self::SessionRevoked, self::AllSessionsRevoked,
+            self::TwoFactorDisabled, self::TwoFactorRecoveryUsed,
+            self::TwoFactorRecoveryRegenerated => 'warning',
+            self::LoginSuccess, self::Register, self::EmailVerified,
+            self::TwoFactorEnabled => 'success',
             default => 'info',
         };
     }

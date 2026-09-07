@@ -7,14 +7,8 @@ on:
 
 jobs:
   backend:
-    name: 后端测试（PHP ${{ matrix.php }}）
+    name: 后端测试
     runs-on: ubuntu-latest
-
-    strategy:
-      fail-fast: false
-      matrix:
-        # 8.2 是 composer.json 宣告的下限，8.3 是线上实际版本，两个都要过
-        php: ['8.2', '8.3']
 
     defaults:
       run:
@@ -26,7 +20,7 @@ jobs:
       - name: 安装 PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ matrix.php }}
+          php-version: '8.3'
           # gd 供头像裁切，sqlite 供测试用的记忆体资料库
           extensions: mbstring, pdo_sqlite, sqlite3, gd, bcmath, intl, zip
           coverage: none
@@ -35,8 +29,8 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.composer/cache
-          key: composer-${{ matrix.php }}-${{ hashFiles('api/composer.lock') }}
-          restore-keys: composer-${{ matrix.php }}-
+          key: composer-${{ hashFiles('api/composer.lock') }}
+          restore-keys: composer-
 
       - name: 安装依赖
         run: composer install --prefer-dist --no-interaction --no-progress

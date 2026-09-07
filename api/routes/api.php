@@ -3,6 +3,9 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\Api\ActivityController;
+use App\Http\Controllers\Api\Admin\AuditController as AdminAuditController;
+use App\Http\Controllers\Api\Admin\StatsController as AdminStatsController;
+use App\Http\Controllers\Api\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Api\AvatarController;
 use App\Http\Controllers\Api\EmailChangeController;
 use App\Http\Controllers\Api\EmailVerificationController;
@@ -13,6 +16,7 @@ use App\Http\Controllers\Api\PasswordResetController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\RegisterController;
 use App\Http\Controllers\Api\SessionController;
+use App\Http\Controllers\Api\TwoFactorController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -40,6 +44,11 @@ Route::prefix('auth')->group(function (): void {
     Route::post('password/reset', [PasswordResetController::class, 'reset'])
         ->middleware('throttle:10,60')
         ->name('auth.password.reset');
+
+    // 双因素第二关：密码已通过但尚未建立登入状态，因此放在公开区
+    Route::post('two-factor-challenge', [LoginController::class, 'twoFactorChallenge'])
+        ->middleware('throttle:20,1')
+        ->name('auth.two-factor.challenge');
 
     // 邮件里的验证连结：signed 中间件校验签名与过期时间
     Route::get('email/verify/{id}/{hash}', [EmailVerificationController::class, 'verify'])
@@ -79,6 +88,22 @@ Route::middleware('auth:sanctum')->group(function (): void {
             ->middleware(['verified', 'throttle:5,60'])
             ->name('me.email-change');
 
+        // 双因素认证
+        Route::prefix('two-factor')->group(function (): void {
+            Route::post('generate', [TwoFactorController::class, 'generate'])
+                ->middleware('throttle:10,60')
+                ->name('me.2fa.generate');
+            Route::post('confirm', [TwoFactorController::class, 'confirm'])
+                ->middleware('throttle:10,10')
+                ->name('me.2fa.confirm');
+            Route::post('disable', [TwoFactorController::class, 'disable'])
+                ->middleware('throttle:10,60')
+                ->name('me.2fa.disable');
+            Route::post('recovery-codes', [TwoFactorController::class, 'regenerateRecoveryCodes'])
+                ->middleware('throttle:5,60')
+                ->name('me.2fa.recovery-codes');
+        });
+
         Route::get('sessions', [SessionController::class, 'index'])->name('me.sessions');
         Route::delete('sessions/others', [SessionController::class, 'destroyOthers'])
             ->name('me.sessions.others');
@@ -89,4 +114,25 @@ Route::middleware('auth:sanctum')->group(function (): void {
         Route::get('activities/actions', [ActivityController::class, 'actions'])
             ->name('me.activities.actions');
     });
+});
+
+// ── 管理端（需 admin 角色）────────────────────────────────
+// 权限由 middleware 把关，与前端选单是否显示无关
+Route::middleware(['auth:sanctum', 'admin'])->prefix('admin')->group(function (): void {
+    Route::get('stats', [AdminStatsController::class, 'index'])->name('admin.stats');
+
+    Route::get('users', [AdminUserController::class, 'index'])->name('admin.users.index');
+    Route::get('users/{user}', [AdminUserController::class, 'show'])->name('admin.users.show');
+    Route::patch('users/{user}/status', [AdminUserController::class, 'updateStatus'])
+        ->name('admin.users.status');
+    Route::patch('users/{user}/role', [AdminUserController::class, 'updateRole'])
+        ->name('admin.users.role');
+    Route::post('users/{user}/unlock', [AdminUserController::class, 'unlock'])
+        ->name('admin.users.unlock');
+    Route::post('users/{user}/force-logout', [AdminUserController::class, 'forceLogout'])
+        ->name('admin.users.force-logout');
+    Route::delete('users/{user}', [AdminUserController::class, 'destroy'])
+        ->name('admin.users.destroy');
+
+    Route::get('audit-logs', [AdminAuditController::class, 'index'])->name('admin.audit-logs');
 });
