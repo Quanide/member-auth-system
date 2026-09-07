@@ -23,8 +23,9 @@ export const authApi = {
       data: payload,
     }),
 
+  /** 啟用 2FA 時只回傳 two_factor_required，此時尚未建立登入狀態 */
   login: (payload: LoginPayload) =>
-    request<{ user: User; message: string }>({
+    request<{ two_factor_required: boolean; user?: User; message: string }>({
       url: '/auth/login',
       method: 'post',
       data: payload,
@@ -37,7 +38,7 @@ export const authApi = {
   resendVerification: () =>
     request<{ message: string }>({ url: '/auth/email/resend', method: 'post' }),
 
-  /** 验证连结带的签名参数原样转发给后端 */
+  /** 驗證連結帶的籤名參數原樣轉發給後端 */
   verifyEmail: (params: { id: string; hash: string; expires: string; signature: string }) =>
     request<{ user: User; message: string }>({
       url: `/auth/email/verify/${params.id}/${params.hash}`,

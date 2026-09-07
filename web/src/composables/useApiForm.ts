@@ -4,9 +4,9 @@ import type { FormInstance } from 'element-plus'
 import { ApiError } from '@/api/client'
 
 /**
- * 表单提交的通用处理：
- * 统一负责 loading 状态、把后端的字段级错误回填到表单、以及错误提示。
- * 每个页面各写一遍 try/catch 既啰嗦又容易漏掉分支。
+ * 表單提交的通用處理：
+ * 統一負責 loading 狀態、把後端的欄位級錯誤回填到表單、以及錯誤提示。
+ * 每個頁面各寫一遍 try/catch 既囉嗦又容易漏掉分支。
  */
 export function useApiForm() {
   const submitting = ref(false)
@@ -46,13 +46,13 @@ export function useApiForm() {
 
   function handleError(error: unknown): void {
     if (!(error instanceof ApiError)) {
-      ElMessage.error('发生未预期的错误，请稍后再试')
+      ElMessage.error('發生未預期的錯誤，請稍後再試')
       console.error(error)
 
       return
     }
 
-    // 字段级错误回填到对应输入框下方，而不是弹一个笼统的提示
+    // 欄位級錯誤回填到對應輸入框下方，而不是彈一個籠統的提示
     if (Object.keys(error.fieldErrors).length > 0) {
       const mapped: Record<string, string> = {}
 

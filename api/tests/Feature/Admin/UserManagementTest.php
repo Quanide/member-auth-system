@@ -31,17 +31,17 @@ final class UserManagementTest extends TestCase
         ]);
     }
 
-    // ── 权限边界 ──────────────────────────────────────
+    // ── 權限邊界 ──────────────────────────────────────
 
     #[Test]
-    public function 未登入无法存取管理端(): void
+    public function 未登入無法存取管理端(): void
     {
         $this->getJson('/api/admin/users')->assertStatus(401);
         $this->getJson('/api/admin/stats')->assertStatus(401);
     }
 
     #[Test]
-    public function 一般会员无法存取管理端(): void
+    public function 一般會員無法存取管理端(): void
     {
         $member = User::factory()->create();
 
@@ -54,7 +54,7 @@ final class UserManagementTest extends TestCase
     }
 
     #[Test]
-    public function 一般会员无法变更他人状态(): void
+    public function 一般會員無法變更他人狀態(): void
     {
         $member = User::factory()->create();
         $victim = User::factory()->create();
@@ -66,10 +66,10 @@ final class UserManagementTest extends TestCase
         $this->assertSame('active', $victim->fresh()->status->value);
     }
 
-    // ── 列表与筛选 ────────────────────────────────────
+    // ── 列表與篩選 ────────────────────────────────────
 
     #[Test]
-    public function 管理员可以取得会员列表(): void
+    public function 管理員可以取得會員列表(): void
     {
         $admin = $this->admin();
         User::factory()->count(3)->create();
@@ -81,10 +81,10 @@ final class UserManagementTest extends TestCase
     }
 
     #[Test]
-    public function 可以用关键字搜寻会员(): void
+    public function 可以用關鍵字搜尋會員(): void
     {
         $admin = $this->admin();
-        User::factory()->create(['email' => 'findme@example.com', 'name' => '被搜寻者']);
+        User::factory()->create(['email' => 'findme@example.com', 'name' => '被搜尋者']);
         User::factory()->count(3)->create();
 
         $response = $this->actingAs($admin)
@@ -96,7 +96,7 @@ final class UserManagementTest extends TestCase
     }
 
     #[Test]
-    public function 可以依状态筛选(): void
+    public function 可以依狀態篩選(): void
     {
         $admin = $this->admin();
         User::factory()->disabled()->create();
@@ -107,10 +107,10 @@ final class UserManagementTest extends TestCase
         $this->assertCount(1, $response->json('data.items'));
     }
 
-    // ── 状态与角色 ────────────────────────────────────
+    // ── 狀態與角色 ────────────────────────────────────
 
     #[Test]
-    public function 管理员可以停权会员(): void
+    public function 管理員可以停權會員(): void
     {
         $admin = $this->admin();
         $target = User::factory()->create();
@@ -123,7 +123,7 @@ final class UserManagementTest extends TestCase
     }
 
     #[Test]
-    public function 停权会同时清除该会员的登入会话(): void
+    public function 停權會同時清除該會員的登入會話(): void
     {
         $admin = $this->admin();
         $target = User::factory()->create();
@@ -133,12 +133,12 @@ final class UserManagementTest extends TestCase
             ->patchJson("/api/admin/users/{$target->id}/status", ['status' => 'disabled'])
             ->assertOk();
 
-        // 停权却留着 session，等于没停
+        // 停權卻留著 session，等於沒停
         $this->assertDatabaseMissing('sessions', ['id' => 'target-session-id']);
     }
 
     #[Test]
-    public function 不能变更自己的状态(): void
+    public function 不能變更自己的狀態(): void
     {
         $admin = $this->admin();
 
@@ -150,17 +150,17 @@ final class UserManagementTest extends TestCase
     }
 
     #[Test]
-    public function 不能把最后一位管理员降级(): void
+    public function 不能把最後一位管理員降級(): void
     {
         $admin = $this->admin();
         $other = User::factory()->admin()->create();
 
-        // 目前有两位管理员，可以降级其中一位
+        // 目前有兩位管理員，可以降級其中一位
         $this->actingAs($admin)
             ->patchJson("/api/admin/users/{$other->id}/role", ['role' => 'member'])
             ->assertOk();
 
-        // 只剩自己一位时不能再降（这里换个管理员来操作，避开「不能改自己」的限制）
+        // 只剩自己一位時不能再降（這裡換個管理員來操作，避開「不能改自己」的限制）
         $newAdmin = User::factory()->admin()->create();
         $this->actingAs($newAdmin)
             ->patchJson("/api/admin/users/{$admin->id}/role", ['role' => 'member'])
@@ -171,7 +171,7 @@ final class UserManagementTest extends TestCase
             ->patchJson("/api/admin/users/{$newAdmin->id}/role", ['role' => 'member'])
             ->assertOk();
 
-        // 现在只剩 lastAdmin 一位，它无法降级自己，也无法被自己删除
+        // 現在只剩 lastAdmin 一位，它無法降級自己，也無法被自己刪除
         $this->actingAs($lastAdmin)
             ->deleteJson("/api/admin/users/{$lastAdmin->id}")
             ->assertStatus(422);
@@ -180,7 +180,7 @@ final class UserManagementTest extends TestCase
     // ── 其他操作 ──────────────────────────────────────
 
     #[Test]
-    public function 可以解除会员锁定(): void
+    public function 可以解除會員鎖定(): void
     {
         $admin = $this->admin();
         $target = User::factory()->locked()->create(['failed_login_count' => 4]);
@@ -195,7 +195,7 @@ final class UserManagementTest extends TestCase
     }
 
     #[Test]
-    public function 可以强制会员登出所有装置(): void
+    public function 可以強制會員登出所有裝置(): void
     {
         $admin = $this->admin();
         $target = User::factory()->create();
@@ -209,7 +209,7 @@ final class UserManagementTest extends TestCase
     }
 
     #[Test]
-    public function 删除会员为软删除以保留稽核轨迹(): void
+    public function 刪除會員為軟刪除以保留稽核軌跡(): void
     {
         $admin = $this->admin();
         $target = User::factory()->create();
@@ -220,7 +220,7 @@ final class UserManagementTest extends TestCase
     }
 
     #[Test]
-    public function 管理操作会写入稽核日志(): void
+    public function 管理操作會寫入稽核日誌(): void
     {
         $admin = $this->admin();
         $target = User::factory()->create();
@@ -235,7 +235,7 @@ final class UserManagementTest extends TestCase
     // ── 看板 ─────────────────────────────────────────
 
     #[Test]
-    public function 管理员可以取得看板统计(): void
+    public function 管理員可以取得看板統計(): void
     {
         $admin = $this->admin();
         User::factory()->count(3)->create();
@@ -257,13 +257,13 @@ final class UserManagementTest extends TestCase
     }
 
     #[Test]
-    public function 趋势资料会补齐没有资料的日期(): void
+    public function 趨勢資料會補齊沒有資料的日期(): void
     {
         $admin = $this->admin();
 
         $response = $this->actingAs($admin)->getJson('/api/admin/stats')->assertOk();
 
-        // 折线图不该因为某天没资料就断掉
+        // 折線圖不該因為某天沒資料就斷掉
         $this->assertCount(30, $response->json('data.registration_trend'));
         $this->assertCount(14, $response->json('data.login_trend.dates'));
         $this->assertCount(14, $response->json('data.login_trend.success'));

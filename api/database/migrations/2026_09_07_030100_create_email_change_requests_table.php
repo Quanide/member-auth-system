@@ -5,9 +5,9 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 /**
- * 变更邮箱申请。
- * 新地址验证通过前不写回 users.email，避免用户误填后把自己锁在门外。
- * token 只存 hash，与 Laravel 的 password_reset_tokens 做法一致。
+ * 變更信箱申請。
+ * 新地址驗證通過前不寫回 users.email，避免使用者誤填後把自己鎖在門外。
+ * token 只存 hash，與 Laravel 的 password_reset_tokens 做法一致。
  */
 return new class extends Migration
 {

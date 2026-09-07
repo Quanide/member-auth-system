@@ -26,9 +26,9 @@ final class PasswordController extends Controller
             $request->string('password')->value(),
         );
 
-        // 服务层已踢掉其他装置，当前会话换个 id 继续用
+        // 服務層已踢掉其他裝置，當前會話換個 id 繼續用
         $request->session()->regenerate();
 
-        return ApiResponse::message('密码已更新，其他装置已被登出');
+        return ApiResponse::message('密碼已更新，其他裝置已被登出');
     }
 }

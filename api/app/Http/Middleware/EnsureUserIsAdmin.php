@@ -12,9 +12,9 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * 管理端守卫。
- * 权限判断只认资料库里的 role 栏位——前端选单藏不藏是体验问题，
- * 真正的边界在这里；直接打 API 一样会被挡下。
+ * 管理端守衛。
+ * 權限判斷只認資料庫裡的 role 欄位——前端選單藏不藏是體驗問題，
+ * 真正的邊界在這裡；直接打 API 一樣會被擋下。
  */
 final class EnsureUserIsAdmin
 {
@@ -23,7 +23,7 @@ final class EnsureUserIsAdmin
         $user = $request->user();
 
         if (! $user instanceof User || ! $user->isAdmin()) {
-            return ApiResponse::error(ErrorCode::FORBIDDEN, '需要管理员权限', 403);
+            return ApiResponse::error(ErrorCode::FORBIDDEN, '需要管理員權限', 403);
         }
 
         return $next($request);

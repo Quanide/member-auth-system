@@ -10,8 +10,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 /**
- * 业务异常基类。
- * 抛出后由框架自动渲染成统一错误结构，控制器里不用层层 if/else 传错误。
+ * 業務異常基類。
+ * 拋出後由框架自動渲染成統一錯誤結構，控制器裡不用層層 if/else 傳錯誤。
  */
 class DomainException extends Exception
 {

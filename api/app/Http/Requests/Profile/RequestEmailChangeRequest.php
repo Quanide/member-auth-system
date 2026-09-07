@@ -20,7 +20,7 @@ final class RequestEmailChangeRequest extends FormRequest
     {
         return [
             'new_email' => ['required', 'string', 'email:rfc,filter', 'max:255', 'unique:users,email'],
-            // 变更邮箱等同于变更帐号入口，必须二次确认身份
+            // 變更信箱等同於變更帳號入口，必須二次確認身份
             'current_password' => ['required', 'string'],
         ];
     }
@@ -31,8 +31,8 @@ final class RequestEmailChangeRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'new_email' => '新邮箱',
-            'current_password' => '目前密码',
+            'new_email' => '新信箱',
+            'current_password' => '目前密碼',
         ];
     }
 
@@ -41,7 +41,7 @@ final class RequestEmailChangeRequest extends FormRequest
      */
     public function messages(): array
     {
-        return ['new_email.unique' => '此邮箱已被其他帐号使用'];
+        return ['new_email.unique' => '此信箱已被其他帳號使用'];
     }
 
     protected function prepareForValidation(): void

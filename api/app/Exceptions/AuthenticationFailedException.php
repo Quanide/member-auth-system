@@ -8,12 +8,12 @@ use App\Support\ErrorCode;
 
 final class AuthenticationFailedException extends DomainException
 {
-    /** 邮箱不存在与密码错误返回完全相同的响应，避免帐号枚举 */
+    /** 信箱不存在與密碼錯誤返回完全相同的響應，避免帳號枚舉 */
     public static function invalidCredentials(int $remainingAttempts): self
     {
         return new self(
             ErrorCode::INVALID_CREDENTIALS,
-            '邮箱或密码不正确',
+            '信箱或密碼不正確',
             422,
             extra: ['remaining_attempts' => $remainingAttempts],
         );
@@ -25,7 +25,7 @@ final class AuthenticationFailedException extends DomainException
 
         return new self(
             ErrorCode::ACCOUNT_LOCKED,
-            "密码错误次数过多，帐号已暂时锁定，请于 {$minutes} 分钟后再试",
+            "密碼錯誤次數過多，帳號已暫時鎖定，請於 {$minutes} 分鐘後再試",
             423,
             extra: ['retry_after' => $seconds],
         );
@@ -35,7 +35,7 @@ final class AuthenticationFailedException extends DomainException
     {
         return new self(
             ErrorCode::ACCOUNT_DISABLED,
-            '此帐号已被停权，请联系客服',
+            '此帳號已被停權，請聯繫客服',
             403,
         );
     }

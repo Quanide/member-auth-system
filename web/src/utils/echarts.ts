@@ -1,7 +1,7 @@
 /**
- * ECharts 按需注册。
- * 只引入实际用到的图表与元件，完整 echarts 包超过 1 MB，
- * 这样打包后只会带上折线、圆环两种图。
+ * ECharts 按需註冊。
+ * 只引入實際用到的圖表與元件，完整 echarts 包超過 1 MB，
+ * 這樣打包後只會帶上折線、圓環兩種圖。
  */
 import { use } from 'echarts/core'
 import { LineChart, PieChart } from 'echarts/charts'
@@ -23,7 +23,7 @@ use([
   CanvasRenderer,
 ])
 
-/** 与全站蓝紫主题一致的图表配色 */
+/** 與全站藍紫主題一致的圖表配色 */
 export const CHART_COLORS = {
   primary: '#6366F1',
   secondary: '#8B5CF6',
@@ -42,7 +42,7 @@ export const CHART_PALETTE = [
   CHART_COLORS.danger,
 ]
 
-/** 图表共用的基础样式，避免每个 option 重复写一遍 */
+/** 圖表共用的基礎樣式，避免每個 option 重複寫一遍 */
 export const baseTextStyle = {
   fontFamily: 'Inter, -apple-system, "PingFang SC", sans-serif',
   color: '#86909C',

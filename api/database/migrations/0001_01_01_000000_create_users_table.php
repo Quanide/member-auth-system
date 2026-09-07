@@ -11,29 +11,29 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
 
-            // ── 帐号 ──
+            // ── 帳號 ──
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
 
-            // ── 会员资料 ──
+            // ── 會員資料 ──
             $table->string('name', 50);
             $table->string('nickname', 50)->nullable();
             $table->string('phone', 32)->nullable();
             $table->date('birthday')->nullable();
             $table->string('gender', 10)->nullable();     // male / female / other
             $table->string('bio', 500)->nullable();
-            $table->string('avatar_path')->nullable();    // 相对 storage/app/public 的路径
+            $table->string('avatar_path')->nullable();    // 相對 storage/app/public 的路徑
 
-            // ── 权限与状态 ──
+            // ── 權限與狀態 ──
             $table->string('role', 20)->default('member');   // member / admin
             $table->string('status', 20)->default('active'); // active / locked / disabled
 
-            // ── 防爆破：账号维度的失败计数，比 IP 限流更难绕过 ──
+            // ── 防爆破：帳號維度的失敗計數，比 IP 限流更難繞過 ──
             $table->unsignedSmallInteger('failed_login_count')->default(0);
             $table->timestamp('locked_until')->nullable();
 
-            // ── 登入轨迹 ──
+            // ── 登入軌跡 ──
             $table->timestamp('last_login_at')->nullable();
             $table->string('last_login_ip', 45)->nullable();
 

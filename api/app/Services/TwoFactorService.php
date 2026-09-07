@@ -17,15 +17,15 @@ use Illuminate\Support\Str;
 use PragmaRX\Google2FA\Google2FA;
 
 /**
- * 双因素认证（TOTP，RFC 6238）。
+ * 雙因素認證（TOTP，RFC 6238）。
  *
- * 流程刻意分成「产生 → 确认 → 启用」三步：
- * 使用者必须先用 App 产出一组正确的验证码，才算真的绑定成功，
- * 否则扫码失败的人会把自己锁在门外。
+ * 流程刻意分成「產生 → 確認 → 啟用」三步：
+ * 使用者必須先用 App 產出一組正確的驗證碼，才算真的綁定成功，
+ * 否則掃碼失敗的人會把自己鎖在門外。
  */
 final class TwoFactorService
 {
-    /** 恢复码数量与长度 */
+    /** 恢復碼數量與長度 */
     private const RECOVERY_CODE_COUNT = 8;
 
     private readonly Google2FA $engine;
@@ -36,7 +36,7 @@ final class TwoFactorService
     }
 
     /**
-     * 产生密钥与 QR Code，此时尚未启用。
+     * 產生密鑰與 QR Code，此時尚未啟用。
      *
      * @return array{secret: string, qr_code: string, otpauth_url: string}
      */
@@ -44,7 +44,7 @@ final class TwoFactorService
     {
         $secret = $this->engine->generateSecretKey(32);
 
-        // 先存起来但不设 confirmed_at，使用者输入验证码后才真正生效
+        // 先存起來但不設 confirmed_at，使用者輸入驗證碼後才真正生效
         $user->forceFill([
             'two_factor_secret' => $secret,
             'two_factor_recovery_codes' => null,
@@ -62,33 +62,33 @@ final class TwoFactorService
     }
 
     /**
-     * 确认绑定：验证码正确才启用，并回传一次性恢复码。
+     * 確認綁定：驗證碼正確才啟用，並回傳一次性恢復碼。
      *
      * @return array<int, string>
      */
     public function confirm(User $user, string $code): array
     {
         if ($user->two_factor_secret === null) {
-            throw new DomainException(ErrorCode::VALIDATION_FAILED, '请先产生绑定用的 QR Code', 422);
+            throw new DomainException(ErrorCode::VALIDATION_FAILED, '請先產生綁定用的 QR Code', 422);
         }
 
         if ($user->two_factor_confirmed_at !== null) {
-            throw new DomainException(ErrorCode::VALIDATION_FAILED, '双因素认证已启用', 409);
+            throw new DomainException(ErrorCode::VALIDATION_FAILED, '雙因素認證已啟用', 409);
         }
 
         if (! $this->verifyCode($user->two_factor_secret, $code)) {
             throw new DomainException(
                 ErrorCode::INVALID_TOKEN,
-                '验证码不正确，请确认手机时间是否准确',
+                '驗證碼不正確，請確認手機時間是否準確',
                 422,
-                ['code' => ['验证码不正确']],
+                ['code' => ['驗證碼不正確']],
             );
         }
 
         $plainCodes = $this->generateRecoveryCodes();
 
         $user->forceFill([
-            // 恢复码同样只存雜凑，遗失只能重新产生，不能反查
+            // 恢復碼同樣只存雜湊，遺失只能重新產生，不能反查
             'two_factor_recovery_codes' => array_map(
                 static fn (string $code): string => Hash::make($code),
                 $plainCodes,
@@ -101,15 +101,15 @@ final class TwoFactorService
         return $plainCodes;
     }
 
-    /** 关闭 2FA，需验证密码 */
+    /** 關閉 2FA，需驗證密碼 */
     public function disable(User $user, string $password): void
     {
         if (! Hash::check($password, $user->password)) {
             throw new DomainException(
                 ErrorCode::PASSWORD_MISMATCH,
-                '密码不正确',
+                '密碼不正確',
                 422,
-                ['password' => ['密码不正确']],
+                ['password' => ['密碼不正確']],
             );
         }
 
@@ -122,15 +122,15 @@ final class TwoFactorService
         $this->audit->log(AuditAction::TwoFactorDisabled, $user);
     }
 
-    /** 重新产生恢复码，旧的立即失效 */
+    /** 重新產生恢復碼，舊的立即失效 */
     public function regenerateRecoveryCodes(User $user, string $password): array
     {
         if (! Hash::check($password, $user->password)) {
             throw new DomainException(
                 ErrorCode::PASSWORD_MISMATCH,
-                '密码不正确',
+                '密碼不正確',
                 422,
-                ['password' => ['密码不正确']],
+                ['password' => ['密碼不正確']],
             );
         }
 
@@ -149,8 +149,8 @@ final class TwoFactorService
     }
 
     /**
-     * 登入时的第二道验证：先试 TOTP，再试恢复码。
-     * 恢复码用掉即作废。
+     * 登入時的第二道驗證：先試 TOTP，再試恢復碼。
+     * 恢復碼用掉即作廢。
      */
     public function challenge(User $user, string $code): bool
     {
@@ -163,7 +163,7 @@ final class TwoFactorService
 
     private function verifyCode(string $secret, string $code): bool
     {
-        // window = 1：容许前后各 30 秒，吸收手机与伺服器的时间误差
+        // window = 1：容許前後各 30 秒，吸收手機與伺服器的時間誤差
         return $this->engine->verifyKey($secret, preg_replace('/\s+/', '', $code) ?? '', 1);
     }
 
@@ -206,7 +206,7 @@ final class TwoFactorService
         );
     }
 
-    /** 直接输出 SVG data URI，前端不必再引入 QR 产生器 */
+    /** 直接輸出 SVG data URI，前端不必再引入 QR 產生器 */
     private function renderQrCode(string $otpauthUrl): string
     {
         $writer = new Writer(

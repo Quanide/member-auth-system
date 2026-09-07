@@ -1,14 +1,14 @@
 /**
- * 上传前在浏览器端压缩头像。
+ * 上傳前在瀏覽器端壓縮頭像。
  *
- * 好处有三：省用户流量、避开后端的尺寸上限、上传更快。
- * 注意这只是优化手段——真正的类型与尺寸校验仍在后端做，
- * 绕过前端直接打 API 一样会被挡下。
+ * 好處有三：省使用者流量、避開後端的尺寸上限、上傳更快。
+ * 注意這只是優化手段——真正的型別與尺寸校驗仍在後端做，
+ * 繞過前端直接打 API 一樣會被擋下。
  */
 export async function compressImage(file: File, maxSize = 512): Promise<File> {
   const bitmap = await createImageBitmap(file).catch(() => null)
 
-  // 浏览器解不开就原样送出，交给后端判断
+  // 瀏覽器解不開就原樣送出，交給後端判斷
   if (!bitmap) return file
 
   try {
@@ -22,7 +22,7 @@ export async function compressImage(file: File, maxSize = 512): Promise<File> {
     const ctx = canvas.getContext('2d')
     if (!ctx) return file
 
-    // 居中裁切成正方形，与后端的裁切逻辑保持一致
+    // 居中裁切成正方形，與後端的裁切邏輯保持一致
     ctx.drawImage(
       bitmap,
       (bitmap.width - side) / 2,

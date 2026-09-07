@@ -28,6 +28,6 @@ final class ForgotPasswordRequest extends FormRequest
      */
     public function attributes(): array
     {
-        return ['email' => '邮箱'];
+        return ['email' => '信箱'];
     }
 }

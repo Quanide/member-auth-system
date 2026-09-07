@@ -13,31 +13,31 @@ const routes: RouteRecordRaw[] = [
     path: '/register',
     name: 'register',
     component: () => import('@/views/auth/RegisterView.vue'),
-    meta: { guestOnly: true, title: '注册' },
+    meta: { guestOnly: true, title: '註冊' },
   },
   {
     path: '/forgot-password',
     name: 'forgot-password',
     component: () => import('@/views/auth/ForgotPasswordView.vue'),
-    meta: { guestOnly: true, title: '忘记密码' },
+    meta: { guestOnly: true, title: '忘記密碼' },
   },
   {
     path: '/reset-password',
     name: 'reset-password',
     component: () => import('@/views/auth/ResetPasswordView.vue'),
-    meta: { guestOnly: true, title: '重设密码' },
+    meta: { guestOnly: true, title: '重設密碼' },
   },
   {
     path: '/verify-email',
     name: 'verify-email',
     component: () => import('@/views/auth/VerifyEmailView.vue'),
-    meta: { title: '邮箱验证' },
+    meta: { title: '信箱驗證' },
   },
   {
     path: '/email-change/confirm',
     name: 'email-change-confirm',
     component: () => import('@/views/auth/EmailChangeConfirmView.vue'),
-    meta: { title: '确认变更邮箱' },
+    meta: { title: '確認變更信箱' },
   },
   {
     path: '/',
@@ -48,39 +48,39 @@ const routes: RouteRecordRaw[] = [
         path: '',
         name: 'dashboard',
         component: () => import('@/views/dashboard/IndexView.vue'),
-        meta: { title: '会员总览' },
+        meta: { title: '會員總覽' },
       },
       {
         path: 'profile',
         name: 'profile',
         component: () => import('@/views/profile/IndexView.vue'),
-        meta: { title: '会员资料' },
+        meta: { title: '會員資料' },
       },
       {
         path: 'security',
         name: 'security',
         component: () => import('@/views/security/IndexView.vue'),
-        meta: { title: '帐号安全' },
+        meta: { title: '帳號安全' },
       },
       {
         path: 'activity',
         name: 'activity',
         component: () => import('@/views/activity/IndexView.vue'),
-        meta: { title: '操作纪录' },
+        meta: { title: '操作紀錄' },
       },
 
-      // ── 管理端：路由守卫挡一层，后端 middleware 再挡一层 ──
+      // ── 管理端：路由守衛擋一層，後端 middleware 再擋一層 ──
       {
         path: 'admin/dashboard',
         name: 'admin-dashboard',
         component: () => import('@/views/admin/DashboardView.vue'),
-        meta: { title: '数据看板', requiresAdmin: true },
+        meta: { title: '數據看板', requiresAdmin: true },
       },
       {
         path: 'admin/users',
         name: 'admin-users',
         component: () => import('@/views/admin/UsersView.vue'),
-        meta: { title: '会员管理', requiresAdmin: true },
+        meta: { title: '會員管理', requiresAdmin: true },
       },
       {
         path: 'admin/audit-logs',
@@ -94,7 +94,7 @@ const routes: RouteRecordRaw[] = [
     path: '/:pathMatch(.*)*',
     name: 'not-found',
     component: () => import('@/views/error/NotFoundView.vue'),
-    meta: { title: '页面不存在' },
+    meta: { title: '頁面不存在' },
   },
 ]
 
@@ -111,13 +111,13 @@ router.beforeEach(async (to) => {
 
   const auth = useAuthStore()
 
-  // 只在首次导航时打一次 /api/me 恢复登入态
+  // 只在首次導航時打一次 /api/me 恢復登入態
   if (!auth.initialized) {
     await auth.bootstrap()
   }
 
   if (to.meta.requiresAuth && !auth.isAuthenticated) {
-    // 记下原本要去的页面，登入后直接跳回去
+    // 記下原本要去的頁面，登入後直接跳回去
     return { name: 'login', query: { redirect: to.fullPath } }
   }
 
@@ -125,7 +125,7 @@ router.beforeEach(async (to) => {
     return { name: 'dashboard' }
   }
 
-  // 前端守卫只是体验优化，真正的权限边界在后端 middleware
+  // 前端守衛只是體驗優化，真正的權限邊界在後端 middleware
   if (to.meta.requiresAdmin && !auth.isAdmin) {
     return { name: 'dashboard' }
   }
@@ -136,7 +136,7 @@ router.beforeEach(async (to) => {
 router.afterEach((to) => {
   NProgress.done()
 
-  const appName = import.meta.env.VITE_APP_NAME || '会员中心'
+  const appName = import.meta.env.VITE_APP_NAME || '會員中心'
   document.title = to.meta.title ? `${to.meta.title} · ${appName}` : appName
 })
 

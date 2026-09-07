@@ -26,7 +26,7 @@ final class PasswordResetController extends Controller
 
             return ApiResponse::error(
                 ErrorCode::TOO_MANY_REQUESTS,
-                "请求过于频繁，请于 {$seconds} 秒后再试",
+                "請求過於頻繁，請於 {$seconds} 秒後再試",
                 429,
                 extra: ['retry_after' => $seconds],
             );
@@ -36,14 +36,14 @@ final class PasswordResetController extends Controller
 
         $this->passwords->sendResetLink($request->string('email')->value());
 
-        // 无论该邮箱是否注册过都回同一句话，避免帐号枚举
-        return ApiResponse::message('若该邮箱已注册，我们已寄出重设密码的连结');
+        // 無論該信箱是否註冊過都回同一句話，避免帳號枚舉
+        return ApiResponse::message('若該信箱已註冊，我們已寄出重設密碼的連結');
     }
 
     public function reset(ResetPasswordRequest $request): JsonResponse
     {
         $this->passwords->reset($request->only('email', 'token', 'password'));
 
-        return ApiResponse::message('密码已重设，请使用新密码登入');
+        return ApiResponse::message('密碼已重設，請使用新密碼登入');
     }
 }

@@ -1,12 +1,12 @@
 <template>
   <div>
-    <h1 class="page-title">会员资料</h1>
-    <p class="page-subtitle">修改您的个人资料与头像</p>
+    <h1 class="page-title">會員資料</h1>
+    <p class="page-subtitle">修改您的個人資料與頭像</p>
 
     <div class="profile-grid">
-      <!-- ── 头像 ───────────────────────────────── -->
+      <!-- ── 頭像 ───────────────────────────────── -->
       <el-card shadow="never" class="avatar-card">
-        <template #header>头像</template>
+        <template #header>頭像</template>
 
         <div class="avatar-box">
           <el-avatar :size="112" :src="auth.user?.avatar_url ?? undefined" class="avatar-preview">
@@ -14,7 +14,7 @@
           </el-avatar>
 
           <div class="avatar-actions">
-            <!-- 用隐藏 input 而非 el-upload：需要在送出前先做客户端压缩 -->
+            <!-- 用隱藏 input 而非 el-upload：需要在送出前先做用戶端壓縮 -->
             <input
               ref="fileInput"
               type="file"
@@ -24,7 +24,7 @@
             />
 
             <el-button type="primary" size="small" :loading="uploading" @click="fileInput?.click()">
-              {{ auth.user?.avatar_url ? '更换头像' : '上传头像' }}
+              {{ auth.user?.avatar_url ? '更換頭像' : '上傳頭像' }}
             </el-button>
 
             <el-button
@@ -37,13 +37,13 @@
             </el-button>
           </div>
 
-          <p class="avatar-hint">支援 JPG / PNG / WebP，上传后会自动裁切为正方形</p>
+          <p class="avatar-hint">支援 JPG / PNG / WebP，上傳後會自動裁切為正方形</p>
         </div>
       </el-card>
 
-      <!-- ── 基本资料 ───────────────────────────── -->
+      <!-- ── 基本資料 ───────────────────────────── -->
       <el-card shadow="never">
-        <template #header>基本资料</template>
+        <template #header>基本資料</template>
 
         <el-form
           ref="formRef"
@@ -56,26 +56,26 @@
             <el-form-item label="姓名" prop="name" :error="serverErrors.name">
               <el-input
                 v-model="form.name"
-                placeholder="请输入姓名"
+                placeholder="請輸入姓名"
                 maxlength="50"
                 show-word-limit
                 @input="clearFieldError('name')"
               />
             </el-form-item>
 
-            <el-form-item label="昵称" prop="nickname" :error="serverErrors.nickname">
+            <el-form-item label="暱稱" prop="nickname" :error="serverErrors.nickname">
               <el-input
                 v-model="form.nickname"
-                placeholder="选填，显示在页面上的称呼"
+                placeholder="選填，顯示在頁面上的稱呼"
                 maxlength="50"
                 @input="clearFieldError('nickname')"
               />
             </el-form-item>
 
-            <el-form-item label="手机号码" prop="phone" :error="serverErrors.phone">
+            <el-form-item label="手機號碼" prop="phone" :error="serverErrors.phone">
               <el-input
                 v-model="form.phone"
-                placeholder="选填，如 0912345678"
+                placeholder="選填，如 0912345678"
                 maxlength="32"
                 @input="clearFieldError('phone')"
               />
@@ -85,14 +85,14 @@
               <el-date-picker
                 v-model="form.birthday"
                 type="date"
-                placeholder="选填"
+                placeholder="選填"
                 value-format="YYYY-MM-DD"
                 :disabled-date="disableFutureDate"
                 style="width: 100%"
               />
             </el-form-item>
 
-            <el-form-item label="性别" prop="gender" :error="serverErrors.gender">
+            <el-form-item label="性別" prop="gender" :error="serverErrors.gender">
               <el-radio-group v-model="form.gender">
                 <el-radio value="male">男</el-radio>
                 <el-radio value="female">女</el-radio>
@@ -101,45 +101,45 @@
             </el-form-item>
           </div>
 
-          <el-form-item label="个人简介" prop="bio" :error="serverErrors.bio">
+          <el-form-item label="個人簡介" prop="bio" :error="serverErrors.bio">
             <el-input
               v-model="form.bio"
               type="textarea"
               :rows="3"
               maxlength="500"
               show-word-limit
-              placeholder="选填，简单介绍一下自己"
+              placeholder="選填，簡單介紹一下自己"
               @input="clearFieldError('bio')"
             />
           </el-form-item>
 
           <div class="form-actions">
-            <el-button type="primary" :loading="submitting" @click="onSubmit">储存变更</el-button>
-            <el-button :disabled="submitting" @click="reset">还原</el-button>
+            <el-button type="primary" :loading="submitting" @click="onSubmit">儲存變更</el-button>
+            <el-button :disabled="submitting" @click="reset">還原</el-button>
           </div>
         </el-form>
       </el-card>
 
-      <!-- ── 帐号资讯（只读）─────────────────────── -->
+      <!-- ── 帳號資訊（只讀）─────────────────────── -->
       <el-card shadow="never" class="meta-card">
-        <template #header>帐号资讯</template>
+        <template #header>帳號資訊</template>
 
         <el-descriptions :column="1" border size="small">
-          <el-descriptions-item label="邮箱">
+          <el-descriptions-item label="信箱">
             <div class="email-cell">
               <span>{{ auth.user?.email }}</span>
-              <el-tag v-if="auth.user?.email_verified" type="success" size="small">已验证</el-tag>
-              <el-tag v-else type="warning" size="small">未验证</el-tag>
+              <el-tag v-if="auth.user?.email_verified" type="success" size="small">已驗證</el-tag>
+              <el-tag v-else type="warning" size="small">未驗證</el-tag>
             </div>
           </el-descriptions-item>
-          <el-descriptions-item label="会员编号">#{{ auth.user?.id }}</el-descriptions-item>
+          <el-descriptions-item label="會員編號">#{{ auth.user?.id }}</el-descriptions-item>
           <el-descriptions-item label="角色">{{ auth.user?.role_label }}</el-descriptions-item>
-          <el-descriptions-item label="状态">
+          <el-descriptions-item label="狀態">
             <el-tag :type="auth.user?.status === 'active' ? 'success' : 'danger'" size="small">
               {{ auth.user?.status_label }}
             </el-tag>
           </el-descriptions-item>
-          <el-descriptions-item label="注册时间">
+          <el-descriptions-item label="註冊時間">
             {{ formatDateTime(auth.user?.created_at) }}
           </el-descriptions-item>
           <el-descriptions-item label="上次登入">
@@ -148,8 +148,8 @@
         </el-descriptions>
 
         <p class="meta-hint">
-          需要修改邮箱或密码？请前往
-          <router-link to="/security" class="link">帐号安全</router-link>
+          需要修改信箱或密碼？請前往
+          <router-link to="/security" class="link">帳號安全</router-link>
         </p>
       </el-card>
     </div>
@@ -187,14 +187,14 @@ const initial = computed(() => auth.user?.display_name?.charAt(0)?.toUpperCase()
 
 const rules: FormRules = {
   name: [
-    { required: true, message: '请输入姓名', trigger: 'blur' },
-    { min: 2, max: 50, message: '姓名长度需介于 2 到 50 个字符', trigger: 'blur' },
+    { required: true, message: '請輸入姓名', trigger: 'blur' },
+    { min: 2, max: 50, message: '姓名長度需介於 2 到 50 個字符', trigger: 'blur' },
   ],
   phone: [
     {
-      // 与后端 regex 规则保持一致，避免前端放行、后端才报错
+      // 與後端 regex 規則保持一致，避免前端放行、後端才報錯
       pattern: /^[+]?[0-9\s\-()]{6,32}$/,
-      message: '手机号码格式不正确',
+      message: '手機號碼格式不正確',
       trigger: 'blur',
     },
   ],
@@ -231,7 +231,7 @@ async function onSubmit(): Promise<void> {
         bio: form.bio || null,
       }),
     {
-      successMessage: '资料已更新',
+      successMessage: '資料已更新',
       onSuccess: ({ user }) => auth.setUser(user),
     },
   )
@@ -241,7 +241,7 @@ async function onFileChange(event: Event): Promise<void> {
   const input = event.target as HTMLInputElement
   const file = input.files?.[0]
 
-  // 清空 value，否则连选两次同一张图不会触发 change
+  // 清空 value，否則連選兩次同一張圖不會觸發 change
   input.value = ''
 
   if (!file) return
@@ -249,7 +249,7 @@ async function onFileChange(event: Event): Promise<void> {
   uploading.value = true
 
   try {
-    // 客户端先压到 512px：省流量，也避免大图触发后端的尺寸上限
+    // 用戶端先壓到 512px：省流量，也避免大圖觸發後端的尺寸上限
     const compressed = await compressImage(file, 512)
     const { user, message } = await profileApi.uploadAvatar(compressed)
 
@@ -264,7 +264,7 @@ async function onFileChange(event: Event): Promise<void> {
 
 async function removeAvatar(): Promise<void> {
   try {
-    await ElMessageBox.confirm('确定要移除目前的头像吗？', '移除头像', {
+    await ElMessageBox.confirm('確定要移除目前的頭像嗎？', '移除頭像', {
       confirmButtonText: '移除',
       cancelButtonText: '取消',
       type: 'warning',
@@ -280,7 +280,7 @@ async function removeAvatar(): Promise<void> {
     auth.setUser(user)
     ElMessage.success(message)
   } catch (error) {
-    ElMessage.error(error instanceof ApiError ? error.message : '移除失败')
+    ElMessage.error(error instanceof ApiError ? error.message : '移除失敗')
   } finally {
     removing.value = false
   }

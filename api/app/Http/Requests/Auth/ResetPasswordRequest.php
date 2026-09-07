@@ -32,8 +32,8 @@ final class ResetPasswordRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'email' => '邮箱',
-            'password' => '新密码',
+            'email' => '信箱',
+            'password' => '新密碼',
         ];
     }
 
@@ -42,6 +42,6 @@ final class ResetPasswordRequest extends FormRequest
      */
     public function messages(): array
     {
-        return ['password.confirmed' => '两次输入的密码不一致'];
+        return ['password.confirmed' => '兩次輸入的密碼不一致'];
     }
 }

@@ -32,7 +32,7 @@ final class RegistrationTest extends TestCase
     }
 
     #[Test]
-    public function 可以成功注册并自动建立会话(): void
+    public function 可以成功註冊並自動建立會話(): void
     {
         Notification::fake();
 
@@ -48,7 +48,7 @@ final class RegistrationTest extends TestCase
     }
 
     #[Test]
-    public function 注册后会寄出验证信(): void
+    public function 註冊後會寄出驗證信(): void
     {
         Notification::fake();
 
@@ -59,7 +59,7 @@ final class RegistrationTest extends TestCase
     }
 
     #[Test]
-    public function 密码以雜湊储存而非明文(): void
+    public function 密碼以雜湊儲存而非明文(): void
     {
         Notification::fake();
 
@@ -72,7 +72,7 @@ final class RegistrationTest extends TestCase
     }
 
     #[Test]
-    public function 邮箱重复时拒绝注册(): void
+    public function 信箱重複時拒絕註冊(): void
     {
         User::factory()->create(['email' => 'taken@example.com']);
 
@@ -84,7 +84,7 @@ final class RegistrationTest extends TestCase
     }
 
     #[Test]
-    public function 邮箱大小写不同视为同一帐号(): void
+    public function 信箱大小寫不同視為同一帳號(): void
     {
         User::factory()->create(['email' => 'taken@example.com']);
 
@@ -93,9 +93,9 @@ final class RegistrationTest extends TestCase
     }
 
     #[Test]
-    public function 弱密码被拒绝(): void
+    public function 弱密碼被拒絕(): void
     {
-        // 纯数字、无字母，不符合 letters() 规则
+        // 純數字、無字母，不符合 letters() 規則
         $this->postJson('/api/auth/register', $this->payload([
             'password' => '12345678',
             'password_confirmation' => '12345678',
@@ -103,7 +103,7 @@ final class RegistrationTest extends TestCase
     }
 
     #[Test]
-    public function 两次密码不一致时被拒绝(): void
+    public function 兩次密碼不一致時被拒絕(): void
     {
         $this->postJson('/api/auth/register', $this->payload([
             'password_confirmation' => 'Different123',
@@ -111,7 +111,7 @@ final class RegistrationTest extends TestCase
     }
 
     #[Test]
-    public function 未同意条款时被拒绝(): void
+    public function 未同意條款時被拒絕(): void
     {
         $this->postJson('/api/auth/register', $this->payload(['agree_terms' => false]))
             ->assertStatus(422)
@@ -119,7 +119,7 @@ final class RegistrationTest extends TestCase
     }
 
     #[Test]
-    public function 无法透过注册接口指定管理员角色(): void
+    public function 無法透過註冊接口指定管理員角色(): void
     {
         Notification::fake();
 
@@ -131,7 +131,7 @@ final class RegistrationTest extends TestCase
     }
 
     #[Test]
-    public function 注册会写入审计日志(): void
+    public function 註冊會寫入審計日誌(): void
     {
         Notification::fake();
 

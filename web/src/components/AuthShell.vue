@@ -1,6 +1,6 @@
 <template>
   <div class="auth-page">
-    <!-- 背景装饰：网格 + 浮动光球 + 扫描线，纯 CSS 实现，不占主线程 -->
+    <!-- 背景裝飾：網格 + 浮動光球 + 掃描線，純 CSS 實作，不佔主線程 -->
     <div class="bg-layer" aria-hidden="true">
       <div class="bg-mesh"></div>
       <div class="bg-orb orb-1"></div>
@@ -10,7 +10,7 @@
     </div>
 
     <div class="auth-wrap" :class="{ 'auth-wrap--narrow': narrow }">
-      <!-- 左侧品牌区（窄版隐藏） -->
+      <!-- 左側品牌區（窄版隱藏） -->
       <div v-if="!narrow" class="auth-brand">
         <div class="brand-logo">
           <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
@@ -35,8 +35,8 @@
           <span class="brand-tag-text">SECURE MEMBER IDENTITY PLATFORM</span>
         </div>
 
-        <h1 class="brand-name">会员中心 <em>Member</em></h1>
-        <p class="brand-desc">安全、可追溯的会员身份管理。</p>
+        <h1 class="brand-name">會員中心 <em>Member</em></h1>
+        <p class="brand-desc">安全、可追溯的會員身份管理。</p>
 
         <div class="brand-features">
           <div v-for="(f, i) in features" :key="f" class="feature-item" :style="{ '--d': 0.4 + i * 0.1 + 's' }">
@@ -50,7 +50,7 @@
         </div>
       </div>
 
-      <!-- 右侧内容卡片 -->
+      <!-- 右側內容卡片 -->
       <div class="auth-card">
         <div class="card-shine" aria-hidden="true"></div>
         <div class="auth-card-inner">
@@ -71,13 +71,13 @@ withDefaults(
   defineProps<{
     title: string
     subtitle?: string
-    /** 窄版：隐藏左侧品牌区，用于验证结果类的单卡片页面 */
+    /** 窄版：隱藏左側品牌區，用於驗證結果類的單卡片頁面 */
     narrow?: boolean
   }>(),
   { subtitle: '', narrow: false },
 )
 
-const features = ['bcrypt 加密储存，绝不落明文', '登入装置管理与操作稽核', '邮箱验证与双重确认变更']
+const features = ['bcrypt 加密儲存，絕不落明文', '登入裝置管理與操作稽核', '信箱驗證與雙重確認變更']
 </script>
 
 <style scoped lang="scss">
@@ -199,7 +199,7 @@ const features = ['bcrypt 加密储存，绝不落明文', '登入装置管理�
   justify-content: center;
 }
 
-// ── 品牌区 ────────────────────────────────────────
+// ── 品牌區 ────────────────────────────────────────
 .auth-brand {
   flex: 1;
   min-width: 0;
@@ -344,7 +344,7 @@ const features = ['bcrypt 加密储存，绝不落明文', '登入装置管理�
   }
 }
 
-// ── 响应式 ────────────────────────────────────────
+// ── 響應式 ────────────────────────────────────────
 @media (max-width: 900px) {
   .auth-wrap {
     flex-direction: column;

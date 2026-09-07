@@ -218,19 +218,49 @@ body {
   }
 }
 
-// ── 通用工具类 ────────────────────────────────────────
+// ── 页首 ─────────────────────────────────────────────
+// 各页共用同一组间距，切换页面时标题不会上下跳动
 .page-title {
   font-size: 20px;
   font-weight: 650;
+  line-height: 1.4;
   color: $text-title;
-  margin: 0 0 4px;
+  margin: 0 0 5px;
 }
 
 .page-subtitle {
   font-size: 13px;
+  line-height: 1.6;
   color: $text-muted;
   margin: 0 0 20px;
 }
+
+// 标题右侧带操作按钮的页首
+.page-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+
+  .page-title,
+  .page-subtitle {
+    margin-bottom: 0;
+  }
+
+  .page-title {
+    margin-bottom: 5px;
+  }
+}
+
+// ── 表格 ─────────────────────────────────────────────
+// 窄萤幕时让表格自己横向捲动，而不是把整个页面撑宽
+.el-card .el-table {
+  overflow-x: auto;
+}
+
+// ── 通用工具类 ────────────────────────────────────────
 
 .text-gradient {
   background: $brand-gradient;

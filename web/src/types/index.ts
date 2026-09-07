@@ -1,4 +1,4 @@
-/** 与后端 App\Http\Resources\UserResource 一一对应 */
+/** 與後端 App\Http\Resources\UserResource 一一對應 */
 export interface User {
   id: number
   email: string
@@ -59,7 +59,7 @@ export interface Overview {
   recent_logins: AuditLog[]
 }
 
-/** 后端统一响应外壳 */
+/** 後端統一響應外殼 */
 export interface ApiSuccess<T> {
   ok: true
   data: T

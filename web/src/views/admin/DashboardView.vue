@@ -2,13 +2,13 @@
   <div v-loading="loading">
     <div class="page-head">
       <div>
-        <h1 class="page-title">数据看板</h1>
-        <p class="page-subtitle">全站会员规模、登入状况与装置分布</p>
+        <h1 class="page-title">數據看板</h1>
+        <p class="page-subtitle">全站會員規模、登入狀況與裝置分布</p>
       </div>
       <el-button :icon="RefreshCw" @click="load">重新整理</el-button>
     </div>
 
-    <!-- 统计卡片 -->
+    <!-- 統計卡片 -->
     <div class="stat-grid">
       <StatCard
         v-for="s in statCards"
@@ -21,12 +21,12 @@
       />
     </div>
 
-    <!-- 趋势图 -->
+    <!-- 趨勢圖 -->
     <div class="chart-grid">
       <el-card shadow="never" class="chart-card">
         <template #header>
           <div class="card-head">
-            <span>注册趋势</span>
+            <span>註冊趨勢</span>
             <span class="card-head-hint">近 30 天</span>
           </div>
         </template>
@@ -36,7 +36,7 @@
       <el-card shadow="never" class="chart-card">
         <template #header>
           <div class="card-head">
-            <span>登入状况</span>
+            <span>登入狀況</span>
             <span class="card-head-hint">近 14 天</span>
           </div>
         </template>
@@ -46,20 +46,20 @@
 
     <div class="chart-grid">
       <el-card shadow="never" class="chart-card">
-        <template #header>会员状态分布</template>
+        <template #header>會員狀態分布</template>
         <VChart
           v-if="stats && stats.status_distribution.length"
           class="chart chart--sm"
           :option="statusOption"
           autoresize
         />
-        <el-empty v-else description="暂无资料" :image-size="70" />
+        <el-empty v-else description="暫無資料" :image-size="70" />
       </el-card>
 
       <el-card shadow="never" class="chart-card">
         <template #header>
           <div class="card-head">
-            <span>登入装置分布</span>
+            <span>登入裝置分布</span>
             <span class="card-head-hint">近 30 天</span>
           </div>
         </template>
@@ -69,7 +69,7 @@
           :option="deviceOption"
           autoresize
         />
-        <el-empty v-else description="暂无登入纪录" :image-size="70" />
+        <el-empty v-else description="暫無登入紀錄" :image-size="70" />
       </el-card>
     </div>
   </div>
@@ -101,16 +101,16 @@ const statCards = computed(() => {
   const o = stats.value?.overview
 
   return [
-    { label: '会员总数', value: o?.total_users ?? 0, icon: Users, color: '#6366F1', tint: '#EFF0FE' },
+    { label: '會員總數', value: o?.total_users ?? 0, icon: Users, color: '#6366F1', tint: '#EFF0FE' },
     { label: '今日新增', value: o?.new_today ?? 0, icon: UserPlus, color: '#8B5CF6', tint: '#F3EEFE' },
-    { label: '在线装置', value: o?.online ?? 0, icon: Wifi, color: '#16A34A', tint: '#F0FDF4' },
-    { label: '已验证邮箱', value: o?.verified ?? 0, icon: CheckCircle2, color: '#0891B2', tint: '#ECFEFF' },
-    { label: '待验证', value: o?.unverified ?? 0, icon: MailWarning, color: '#EA580C', tint: '#FFF7ED' },
-    { label: '锁定 / 停权', value: (o?.locked ?? 0) + (o?.disabled ?? 0), icon: Lock, color: '#F53F3F', tint: '#FFF1F0' },
+    { label: '在線裝置', value: o?.online ?? 0, icon: Wifi, color: '#16A34A', tint: '#F0FDF4' },
+    { label: '已驗證信箱', value: o?.verified ?? 0, icon: CheckCircle2, color: '#0891B2', tint: '#ECFEFF' },
+    { label: '待驗證', value: o?.unverified ?? 0, icon: MailWarning, color: '#EA580C', tint: '#FFF7ED' },
+    { label: '鎖定 / 停權', value: (o?.locked ?? 0) + (o?.disabled ?? 0), icon: Lock, color: '#F53F3F', tint: '#FFF1F0' },
   ]
 })
 
-/** 折线图共用的坐标轴设定，避免四张图各写一遍 */
+/** 折線圖共用的坐標軸設定，避免四張圖各寫一遍 */
 const axisBase = {
   xAxis: {
     type: 'category' as const,
@@ -121,7 +121,7 @@ const axisBase = {
   },
   yAxis: {
     type: 'value' as const,
-    minInterval: 1, // 人数是整数，避免出现 0.5 这种刻度
+    minInterval: 1, // 人數是整數，避免出現 0.5 這種刻度
     splitLine: { lineStyle: { color: '#F4F4F9' } },
     axisLabel: baseTextStyle,
   },
@@ -137,7 +137,7 @@ const registrationOption = computed(() => {
     xAxis: { ...axisBase.xAxis, data: trend.map((d) => d.date.slice(5)) },
     series: [
       {
-        name: '注册人数',
+        name: '註冊人數',
         type: 'line',
         smooth: true,
         symbol: 'circle',
@@ -168,7 +168,7 @@ const loginOption = computed(() => {
     ...axisBase,
     tooltip: baseTooltip,
     legend: {
-      data: ['成功', '失败'],
+      data: ['成功', '失敗'],
       top: 0,
       right: 0,
       icon: 'roundRect',
@@ -189,7 +189,7 @@ const loginOption = computed(() => {
         itemStyle: { color: CHART_COLORS.success },
       },
       {
-        name: '失败',
+        name: '失敗',
         type: 'line',
         smooth: true,
         showSymbol: false,
@@ -201,7 +201,7 @@ const loginOption = computed(() => {
   }
 })
 
-/** 圆环图共用设定 */
+/** 圓環圖共用設定 */
 function donutOption(data: Array<{ name: string; value: number }>) {
   return {
     color: CHART_PALETTE,
@@ -241,7 +241,7 @@ async function load(): Promise<void> {
   try {
     stats.value = await adminApi.stats()
   } catch (error) {
-    ElMessage.error(error instanceof ApiError ? error.message : '载入失败')
+    ElMessage.error(error instanceof ApiError ? error.message : '載入失敗')
   } finally {
     loading.value = false
   }
@@ -252,14 +252,6 @@ onMounted(load)
 
 <style scoped lang="scss">
 @use '@/styles/tokens.scss' as *;
-
-.page-head {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
-}
 
 .stat-grid {
   display: grid;

@@ -1,14 +1,14 @@
 <template>
-  <AuthShell title="变更邮箱" narrow>
+  <AuthShell title="變更信箱" narrow>
     <div v-if="state === 'pending'" class="state-box">
       <el-icon class="is-loading spin" :size="34"><Loading /></el-icon>
-      <p class="state-text">正在确认您的新邮箱…</p>
+      <p class="state-text">正在確認您的新信箱…</p>
     </div>
 
-    <el-result v-else-if="state === 'success'" icon="success" title="邮箱变更成功">
+    <el-result v-else-if="state === 'success'" icon="success" title="信箱變更成功">
       <template #sub-title>
         <p class="state-desc">
-          您的帐号邮箱已更新为 <strong>{{ newEmail }}</strong>，往后请使用新邮箱登入。
+          您的帳號信箱已更新為 <strong>{{ newEmail }}</strong>，往後請使用新信箱登入。
         </p>
       </template>
       <template #extra>
@@ -16,12 +16,12 @@
       </template>
     </el-result>
 
-    <el-result v-else icon="error" title="变更失败">
+    <el-result v-else icon="error" title="變更失敗">
       <template #sub-title>
         <p class="state-desc">{{ errorMessage }}</p>
       </template>
       <template #extra>
-        <el-button @click="$router.push('/security')">返回帐号安全</el-button>
+        <el-button @click="$router.push('/security')">返回帳號安全</el-button>
       </template>
     </el-result>
   </AuthShell>
@@ -39,14 +39,14 @@ const route = useRoute()
 
 const state = ref<'pending' | 'success' | 'error'>('pending')
 const newEmail = ref('')
-const errorMessage = ref('验证连结无效或已过期，请重新申请。')
+const errorMessage = ref('驗證連結無效或已過期，請重新申請。')
 
 onMounted(async () => {
   const token = route.query.token
 
   if (typeof token !== 'string' || token === '') {
     state.value = 'error'
-    errorMessage.value = '连结缺少验证参数，请重新从邮件中点击连结。'
+    errorMessage.value = '連結缺少驗證參數，請重新從郵件中點擊連結。'
 
     return
   }

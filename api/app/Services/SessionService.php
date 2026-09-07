@@ -11,8 +11,8 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 /**
- * 登入装置管理。
- * session driver 设为 database，才能把「目前有哪些装置登入着」列出来并逐一撤销。
+ * 登入裝置管理。
+ * session driver 設為 database，才能把「目前有哪些裝置登入著」列出來並逐一撤銷。
  */
 final class SessionService
 {
@@ -28,7 +28,7 @@ final class SessionService
             ->orderByDesc('last_activity')
             ->get()
             ->map(fn (object $row): array => [
-                // 不把完整 session id 发给前端，截断后仅用于页面上区分不同装置
+                // 不把完整 session id 發給前端，截斷後僅用於頁面上區分不同裝置
                 'id' => substr($row->id, 0, 12),
                 'is_current' => $row->id === $currentSessionId,
                 'ip_address' => $row->ip_address,
@@ -38,12 +38,12 @@ final class SessionService
             ]);
     }
 
-    /** 撤销单一装置（按截断后的前缀匹配） */
+    /** 撤銷單一裝置（按截斷後的前綴匹配） */
     public function revoke(User $user, string $sessionIdPrefix, string $currentSessionId): bool
     {
         $deleted = DB::table('sessions')
             ->where('user_id', $user->id)
-            ->where('id', '!=', $currentSessionId) // 不允许把自己踢掉，避免误操作
+            ->where('id', '!=', $currentSessionId) // 不允許把自己踢掉，避免誤操作
             ->where('id', 'like', $sessionIdPrefix.'%')
             ->delete();
 
@@ -54,7 +54,7 @@ final class SessionService
         return $deleted > 0;
     }
 
-    /** 登出其他所有装置 */
+    /** 登出其他所有裝置 */
     public function revokeOthers(User $user, string $currentSessionId): int
     {
         $count = DB::table('sessions')
@@ -71,7 +71,7 @@ final class SessionService
         return $count;
     }
 
-    /** 从 UA 粗略解析装置信息，仅供用户辨认，不做精确指纹 */
+    /** 從 UA 粗略解析裝置資訊，僅供使用者辨認，不做精確指紋 */
     private function describeDevice(string $userAgent): string
     {
         $os = match (true) {
@@ -81,7 +81,7 @@ final class SessionService
             str_contains($userAgent, 'Android') => 'Android',
             str_contains($userAgent, 'Mac OS X') => 'macOS',
             str_contains($userAgent, 'Linux') => 'Linux',
-            default => '未知系统',
+            default => '未知系統',
         };
 
         $browser = match (true) {
@@ -89,7 +89,7 @@ final class SessionService
             str_contains($userAgent, 'Chrome/') && ! str_contains($userAgent, 'Chromium') => 'Chrome',
             str_contains($userAgent, 'Firefox/') => 'Firefox',
             str_contains($userAgent, 'Safari/') && ! str_contains($userAgent, 'Chrome') => 'Safari',
-            default => '未知浏览器',
+            default => '未知瀏覽器',
         };
 
         return "{$os} · {$browser}";

@@ -43,6 +43,7 @@ declare module 'vue' {
     RouterView: typeof import('vue-router')['RouterView']
     SideMenu: typeof import('./src/components/SideMenu.vue')['default']
     StatCard: typeof import('./src/components/StatCard.vue')['default']
+    TwoFactorCard: typeof import('./src/components/TwoFactorCard.vue')['default']
   }
   export interface GlobalDirectives {
     vLoading: typeof import('element-plus/es')['ElLoadingDirective']

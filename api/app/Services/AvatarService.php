@@ -14,22 +14,22 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 /**
- * 头像处理。
+ * 頭像處理。
  *
- * 安全要点：
- *  - 不信任客户端给的扩展名与 Content-Type，用 getimagesize() 读文件头判定真实类型
- *  - 服务端一律重新编码输出，顺带剥掉 EXIF（含 GPS 定位）与可能夹带的脚本
- *  - 存储路径用随机文件名，避免目录穿越与覆盖他人文件
+ * 安全要點：
+ *  - 不信任用戶端給的副檔名與 Content-Type，用 getimagesize() 讀檔頭判定真實型別
+ *  - 服務端一律重新編碼輸出，順帶剝掉 EXIF（含 GPS 定位）與可能夾帶的腳本
+ *  - 儲存路徑用隨機檔名，避免目錄穿越與覆蓋他人檔案
  */
 final class AvatarService
 {
-    /** 输出边长（正方形） */
+    /** 輸出邊長（正方形） */
     private const OUTPUT_SIZE = 512;
 
-    /** 允许的真实图片类型 */
+    /** 允許的真實圖片型別 */
     private const ALLOWED_TYPES = [IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_WEBP];
 
-    /** 解码前的像素上限，防「解压炸弹」把内存吃光 */
+    /** 解碼前的像素上限，防「解壓炸彈」把記憶體吃光 */
     private const MAX_PIXELS = 8000 * 8000;
 
     public function __construct(private readonly AuditLogger $audit) {}
@@ -56,7 +56,7 @@ final class AvatarService
         $old = $user->avatar_path;
         $user->forceFill(['avatar_path' => $path])->save();
 
-        // 先写新的再删旧的：中途失败也不会让用户头像凭空消失
+        // 先寫新的再刪舊的：中途失敗也不會讓使用者頭像憑空消失
         if ($old !== null) {
             Storage::disk('public')->delete($old);
         }
@@ -80,7 +80,7 @@ final class AvatarService
         $this->audit->log(AuditAction::AvatarRemoved, $user);
     }
 
-    /** 读文件头校验并解码为 GD 资源 */
+    /** 讀檔頭校驗並解碼為 GD 資源 */
     private function decode(UploadedFile $file): GdImage
     {
         $info = @getimagesize($file->getRealPath());
@@ -88,18 +88,18 @@ final class AvatarService
         if ($info === false || ! in_array($info[2], self::ALLOWED_TYPES, true)) {
             throw new DomainException(
                 ErrorCode::VALIDATION_FAILED,
-                '头像必须是 JPG、PNG 或 WebP 图片',
+                '頭像必須是 JPG、PNG 或 WebP 圖片',
                 422,
-                ['avatar' => ['头像必须是 JPG、PNG 或 WebP 图片']],
+                ['avatar' => ['頭像必須是 JPG、PNG 或 WebP 圖片']],
             );
         }
 
         if ($info[0] * $info[1] > self::MAX_PIXELS) {
             throw new DomainException(
                 ErrorCode::VALIDATION_FAILED,
-                '图片尺寸过大，请压缩后再上传',
+                '圖片尺寸過大，請壓縮後再上傳',
                 422,
-                ['avatar' => ['图片尺寸过大，请压缩后再上传']],
+                ['avatar' => ['圖片尺寸過大，請壓縮後再上傳']],
             );
         }
 
@@ -108,16 +108,16 @@ final class AvatarService
         if ($image === false) {
             throw new DomainException(
                 ErrorCode::VALIDATION_FAILED,
-                '图片已损坏或无法解析',
+                '圖片已損壞或無法解析',
                 422,
-                ['avatar' => ['图片已损坏或无法解析']],
+                ['avatar' => ['圖片已損壞或無法解析']],
             );
         }
 
         return $image;
     }
 
-    /** 居中裁切成正方形并缩放到固定边长 */
+    /** 居中裁切成正方形並縮放到固定邊長 */
     private function cropToSquare(GdImage $source): GdImage
     {
         $width = imagesx($source);
@@ -126,7 +126,7 @@ final class AvatarService
 
         $canvas = imagecreatetruecolor(self::OUTPUT_SIZE, self::OUTPUT_SIZE);
 
-        // 保留 PNG/WebP 的透明通道，否则透明区会变成黑块
+        // 保留 PNG/WebP 的透明通道，否則透明區會變成黑塊
         imagealphablending($canvas, false);
         imagesavealpha($canvas, true);
         $transparent = imagecolorallocatealpha($canvas, 0, 0, 0, 127);
@@ -146,8 +146,8 @@ final class AvatarService
     }
 
     /**
-     * 编码输出。优先 WebP（同画质体积约为 JPEG 的 70%），
-     * GD 未编译 WebP 支持时回落到 PNG。
+     * 編碼輸出。優先 WebP（同畫質體積約為 JPEG 的 70%），
+     * GD 未編譯 WebP 支援時回落到 PNG。
      *
      * @return array{0: string, 1: string}
      */

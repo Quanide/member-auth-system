@@ -19,7 +19,7 @@ final class AdminUserService
     public function __construct(private readonly AuditLogger $audit) {}
 
     /**
-     * 会员列表：关键字 + 状态 + 角色筛选。
+     * 會員列表：關鍵字 + 狀態 + 角色篩選。
      *
      * @param  array<string, mixed>  $filters
      * @return LengthAwarePaginator<int, User>
@@ -52,14 +52,14 @@ final class AdminUserService
             ->paginate((int) ($filters['per_page'] ?? 20));
     }
 
-    /** 变更会员状态（停权 / 恢复） */
+    /** 變更會員狀態（停權 / 恢復） */
     public function updateStatus(User $operator, User $target, UserStatus $status): User
     {
-        $this->assertNotSelf($operator, $target, '不能变更自己的帐号状态');
+        $this->assertNotSelf($operator, $target, '不能變更自己的帳號狀態');
 
         $target->forceFill(['status' => $status])->save();
 
-        // 停权后立即清掉该会员所有登入中的会话，否则他手上的 session 还能继续用
+        // 停權後立即清掉該會員所有登入中的會話，否則他手上的 session 還能繼續用
         if ($status !== UserStatus::Active) {
             $this->revokeAllSessions($target);
         }
@@ -73,16 +73,16 @@ final class AdminUserService
         return $target;
     }
 
-    /** 变更会员角色 */
+    /** 變更會員角色 */
     public function updateRole(User $operator, User $target, UserRole $role): User
     {
-        $this->assertNotSelf($operator, $target, '不能变更自己的角色');
+        $this->assertNotSelf($operator, $target, '不能變更自己的角色');
 
-        // 避免把最后一个管理员降级，导致没人能进管理端
+        // 避免把最後一個管理員降級，導致沒人能進管理端
         if ($target->isAdmin() && $role !== UserRole::Admin && $this->adminCount() <= 1) {
             throw new DomainException(
                 ErrorCode::FORBIDDEN,
-                '系统至少需要保留一位管理员',
+                '系統至少需要保留一位管理員',
                 422,
             );
         }
@@ -98,7 +98,7 @@ final class AdminUserService
         return $target;
     }
 
-    /** 解除因密码错误过多造成的锁定 */
+    /** 解除因密碼錯誤過多造成的鎖定 */
     public function unlock(User $operator, User $target): User
     {
         $target->forceFill(['locked_until' => null, 'failed_login_count' => 0])->save();
@@ -111,7 +111,7 @@ final class AdminUserService
         return $target;
     }
 
-    /** 强制该会员在所有装置登出 */
+    /** 強制該會員在所有裝置登出 */
     public function forceLogout(User $operator, User $target): int
     {
         $count = $this->revokeAllSessions($target);
@@ -125,13 +125,13 @@ final class AdminUserService
         return $count;
     }
 
-    /** 软删除会员（保留稽核轨迹，可复原） */
+    /** 軟刪除會員（保留稽核軌跡，可復原） */
     public function delete(User $operator, User $target): void
     {
-        $this->assertNotSelf($operator, $target, '不能删除自己的帐号');
+        $this->assertNotSelf($operator, $target, '不能刪除自己的帳號');
 
         if ($target->isAdmin() && $this->adminCount() <= 1) {
-            throw new DomainException(ErrorCode::FORBIDDEN, '系统至少需要保留一位管理员', 422);
+            throw new DomainException(ErrorCode::FORBIDDEN, '系統至少需要保留一位管理員', 422);
         }
 
         $this->revokeAllSessions($target);

@@ -18,12 +18,12 @@ final class ResetPasswordNotification extends BaseResetPassword
         $expire = config('auth.passwords.'.config('auth.defaults.passwords').'.expire');
 
         return (new MailMessage)
-            ->subject('重设您的密码 — '.config('app.name'))
+            ->subject('重設您的密碼 — '.config('app.name'))
             ->greeting('您好，')
-            ->line('我们收到了重设此帐号密码的申请。')
-            ->action('重设密码', $url)
-            ->line("此连结将在 {$expire} 分钟后失效。")
-            ->line('若这不是您本人的操作，无需任何处理，您的密码不会被更改。')
+            ->line('我們收到了重設此帳號密碼的申請。')
+            ->action('重設密碼', $url)
+            ->line("此連結將在 {$expire} 分鐘後失效。")
+            ->line('若這不是您本人的操作，無需任何處理，您的密碼不會被更改。')
             ->salutation('— '.config('app.name'));
     }
 }

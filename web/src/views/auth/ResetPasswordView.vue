@@ -1,26 +1,26 @@
 <template>
-  <AuthShell title="重设密码" subtitle="请设定一组新的密码" narrow>
+  <AuthShell title="重設密碼" subtitle="請設定一組新的密碼" narrow>
     <el-alert
       v-if="!token || !email"
       type="error"
       :closable="false"
-      title="连结无效"
-      description="缺少必要参数，请重新从邮件中的连结进入。"
+      title="連結無效"
+      description="缺少必要參數，請重新從郵件中的連結進入。"
       show-icon
     />
 
     <template v-else-if="!done">
       <el-form ref="formRef" :model="form" :rules="rules" label-position="top" @submit.prevent="onSubmit">
-        <el-form-item label="帐号">
+        <el-form-item label="帳號">
           <el-input :model-value="email" size="large" disabled :prefix-icon="Message" />
         </el-form-item>
 
-        <el-form-item label="新密码" prop="password" :error="serverErrors.password">
+        <el-form-item label="新密碼" prop="password" :error="serverErrors.password">
           <el-input
             v-model="form.password"
             type="password"
             size="large"
-            placeholder="至少 8 位，需含英文字母与数字"
+            placeholder="至少 8 位，需含英文字母與數字"
             autocomplete="new-password"
             show-password
             :prefix-icon="Lock"
@@ -29,12 +29,12 @@
           <PasswordStrength :password="form.password" />
         </el-form-item>
 
-        <el-form-item label="确认新密码" prop="password_confirmation">
+        <el-form-item label="確認新密碼" prop="password_confirmation">
           <el-input
             v-model="form.password_confirmation"
             type="password"
             size="large"
-            placeholder="请再次输入新密码"
+            placeholder="請再次輸入新密碼"
             autocomplete="new-password"
             show-password
             :prefix-icon="Lock"
@@ -43,14 +43,14 @@
         </el-form-item>
 
         <el-button type="primary" size="large" class="submit-btn" :loading="submitting" @click="onSubmit">
-          确认重设
+          確認重設
         </el-button>
       </el-form>
     </template>
 
-    <el-result v-else icon="success" title="密码已重设">
+    <el-result v-else icon="success" title="密碼已重設">
       <template #sub-title>
-        <p class="result-desc">请使用新密码重新登入。</p>
+        <p class="result-desc">請使用新密碼重新登入。</p>
       </template>
       <template #extra>
         <el-button type="primary" @click="$router.push('/login')">前往登入</el-button>
@@ -82,23 +82,23 @@ const form = reactive({ password: '', password_confirmation: '' })
 
 const rules: FormRules = {
   password: [
-    { required: true, message: '请输入新密码', trigger: 'blur' },
-    { min: 8, message: '密码至少 8 个字符', trigger: 'blur' },
+    { required: true, message: '請輸入新密碼', trigger: 'blur' },
+    { min: 8, message: '密碼至少 8 個字符', trigger: 'blur' },
     {
       validator: (_rule, value: string, callback) => {
         if (!value) return callback()
-        if (!/[a-zA-Z]/.test(value)) return callback(new Error('密码需包含英文字母'))
-        if (!/\d/.test(value)) return callback(new Error('密码需包含数字'))
+        if (!/[a-zA-Z]/.test(value)) return callback(new Error('密碼需包含英文字母'))
+        if (!/\d/.test(value)) return callback(new Error('密碼需包含數字'))
         callback()
       },
       trigger: 'blur',
     },
   ],
   password_confirmation: [
-    { required: true, message: '请再次输入新密码', trigger: 'blur' },
+    { required: true, message: '請再次輸入新密碼', trigger: 'blur' },
     {
       validator: (_rule, value: string, callback) => {
-        if (value !== form.password) return callback(new Error('两次输入的密码不一致'))
+        if (value !== form.password) return callback(new Error('兩次輸入的密碼不一致'))
         callback()
       },
       trigger: 'blur',

@@ -1,28 +1,28 @@
 <template>
   <div v-loading="loading">
-    <h1 class="page-title">会员总览</h1>
-    <p class="page-subtitle">您的帐号状态与近期活动一览</p>
+    <h1 class="page-title">會員總覽</h1>
+    <p class="page-subtitle">您的帳號狀態與近期活動一覽</p>
 
-    <!-- 邮箱未验证提示 -->
+    <!-- 信箱未驗證提示 -->
     <el-alert
       v-if="overview && !overview.security.email_verified"
       class="verify-alert"
       type="warning"
       :closable="false"
       show-icon
-      title="邮箱尚未验证"
+      title="信箱尚未驗證"
     >
       <template #default>
         <div class="alert-body">
-          <span>验证后才能变更邮箱等敏感操作。没收到信？可以重新寄送。</span>
+          <span>驗證後才能變更信箱等敏感操作。沒收到信？可以重新寄送。</span>
           <el-button size="small" type="warning" plain :loading="resending" @click="resend">
-            重寄验证信
+            重寄驗證信
           </el-button>
         </div>
       </template>
     </el-alert>
 
-    <!-- 统计卡片 -->
+    <!-- 統計卡片 -->
     <div class="stat-grid">
       <div v-for="stat in stats" :key="stat.label" class="stat-card">
         <div class="stat-icon" :style="{ background: stat.bg, color: stat.color }">
@@ -36,9 +36,9 @@
     </div>
 
     <div class="grid-2">
-      <!-- 资料完整度 -->
+      <!-- 資料完整度 -->
       <el-card shadow="never">
-        <template #header>资料完整度</template>
+        <template #header>資料完整度</template>
 
         <div class="completeness">
           <el-progress
@@ -49,10 +49,10 @@
           />
           <div class="completeness-hint">
             <p v-if="(overview?.security.profile_completeness ?? 0) >= 100" class="hint-good">
-              资料已填写完整，很棒！
+              資料已填寫完整，很棒！
             </p>
             <template v-else>
-              <p class="hint-text">补全以下资料让帐号更完整：</p>
+              <p class="hint-text">補全以下資料讓帳號更完整：</p>
               <ul class="missing-list">
                 <li v-for="field in missingFields" :key="field">{{ field }}</li>
               </ul>
@@ -75,7 +75,7 @@
           </div>
         </template>
 
-        <el-empty v-if="!overview?.recent_logins.length" description="暂无登入纪录" :image-size="70" />
+        <el-empty v-if="!overview?.recent_logins.length" description="暫無登入紀錄" :image-size="70" />
 
         <ul v-else class="login-list">
           <li v-for="log in overview.recent_logins" :key="log.id" class="login-item">
@@ -110,28 +110,28 @@ const resending = ref(false)
 
 const stats = computed(() => [
   {
-    label: '登入中的装置',
+    label: '登入中的裝置',
     value: overview.value?.stats.active_sessions ?? 0,
     icon: MonitorSmartphone,
     bg: '#EFF0FE',
     color: '#6366F1',
   },
   {
-    label: '近 7 天登入失败',
+    label: '近 7 天登入失敗',
     value: overview.value?.stats.failed_logins_7d ?? 0,
     icon: ShieldAlert,
     bg: '#FFF1F0',
     color: '#F53F3F',
   },
   {
-    label: '操作纪录总数',
+    label: '操作紀錄總數',
     value: overview.value?.stats.total_activities ?? 0,
     icon: ScrollText,
     bg: '#F0FDF4',
     color: '#16A34A',
   },
   {
-    label: '帐号已建立（天）',
+    label: '帳號已建立（天）',
     value: overview.value?.stats.account_age_days ?? 0,
     icon: CalendarDays,
     bg: '#FFF7ED',
@@ -147,18 +147,18 @@ const progressColor = computed(() => {
   return '#FF7D00'
 })
 
-/** 提示用户还差哪些资料没填 */
+/** 提示使用者還差哪些資料沒填 */
 const missingFields = computed(() => {
   const user = overview.value?.user
   if (!user) return []
 
   const checks: Array<[string, unknown]> = [
-    ['昵称', user.nickname],
-    ['手机号码', user.phone],
+    ['暱稱', user.nickname],
+    ['手機號碼', user.phone],
     ['生日', user.birthday],
-    ['性别', user.gender],
-    ['个人简介', user.bio],
-    ['头像', user.avatar_url],
+    ['性別', user.gender],
+    ['個人簡介', user.bio],
+    ['頭像', user.avatar_url],
   ]
 
   return checks.filter(([, value]) => !value).map(([label]) => label)
@@ -171,7 +171,7 @@ async function load(): Promise<void> {
     overview.value = await profileApi.overview()
     auth.setUser(overview.value.user)
   } catch (error) {
-    ElMessage.error(error instanceof ApiError ? error.message : '载入失败')
+    ElMessage.error(error instanceof ApiError ? error.message : '載入失敗')
   } finally {
     loading.value = false
   }
@@ -184,7 +184,7 @@ async function resend(): Promise<void> {
     const { message } = await authApi.resendVerification()
     ElMessage.success(message)
   } catch (error) {
-    ElMessage.error(error instanceof ApiError ? error.message : '寄送失败')
+    ElMessage.error(error instanceof ApiError ? error.message : '寄送失敗')
   } finally {
     resending.value = false
   }

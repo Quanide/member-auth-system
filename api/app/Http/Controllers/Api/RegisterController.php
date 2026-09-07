@@ -20,13 +20,13 @@ final class RegisterController extends Controller
     {
         $user = $this->auth->register($request->validated());
 
-        // 注册后直接建立会话，省掉一次登入；邮箱验证异步进行不阻断使用
+        // 註冊後直接建立會話，省掉一次登入；信箱驗證異步進行不阻斷使用
         Auth::guard('web')->login($user);
         $request->session()->regenerate();
 
         return ApiResponse::ok([
             'user' => new UserResource($user),
-            'message' => '注册成功，验证信已寄至您的邮箱',
+            'message' => '註冊成功，驗證信已寄至您的信箱',
         ], 201);
     }
 }

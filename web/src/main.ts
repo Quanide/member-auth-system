@@ -4,10 +4,10 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
 
-// Element Plus 采按需引入（见 vite.config.ts 的 ElementPlusResolver），
-// 模板里的 el-* 组件与其样式由插件自动处理，这里只补三类例外：
-// 1) 基础变量与暗色变量：所有组件共用
-// 2) 函数式 API（ElMessage / ElMessageBox / ElLoading）：程式码里显式 import，resolver 扫不到
+// Element Plus 採按需引入（見 vite.config.ts 的 ElementPlusResolver），
+// 模板裡的 el-* 組件與其樣式由插件自動處理，這裡只補三類例外：
+// 1) 基礎變量與暗色變量：所有組件共用
+// 2) 函數式 API（ElMessage / ElMessageBox / ElLoading）：程式碼裡顯式 import，resolver 掃不到
 import 'element-plus/theme-chalk/base.css'
 import 'element-plus/theme-chalk/el-message.css'
 import 'element-plus/theme-chalk/el-message-box.css'

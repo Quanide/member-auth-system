@@ -25,7 +25,7 @@ final class LoginTest extends TestCase
     }
 
     #[Test]
-    public function 正确凭证可以登入(): void
+    public function 正確憑證可以登入(): void
     {
         $user = $this->user();
 
@@ -38,7 +38,7 @@ final class LoginTest extends TestCase
     }
 
     #[Test]
-    public function 登入会记录时间与ip(): void
+    public function 登入會記錄時間與ip(): void
     {
         $user = $this->user();
 
@@ -54,7 +54,7 @@ final class LoginTest extends TestCase
     }
 
     #[Test]
-    public function 密码错误时拒绝登入(): void
+    public function 密碼錯誤時拒絕登入(): void
     {
         $this->user();
 
@@ -67,7 +67,7 @@ final class LoginTest extends TestCase
     }
 
     #[Test]
-    public function 帐号不存在与密码错误返回相同错误码以防枚举(): void
+    public function 帳號不存在與密碼錯誤返回相同錯誤碼以防枚舉(): void
     {
         $this->user();
 
@@ -86,7 +86,7 @@ final class LoginTest extends TestCase
     }
 
     #[Test]
-    public function 连续失败达上限后锁定帐号(): void
+    public function 連續失敗達上限後鎖定帳號(): void
     {
         $user = $this->user();
 
@@ -97,7 +97,7 @@ final class LoginTest extends TestCase
             ])->assertStatus(422);
         }
 
-        // 第 5 次触发锁定
+        // 第 5 次觸發鎖定
         $this->postJson('/api/auth/login', [
             'email' => 'member@example.com',
             'password' => 'WrongPassword1',
@@ -106,7 +106,7 @@ final class LoginTest extends TestCase
         $user->refresh();
         $this->assertTrue($user->isTemporarilyLocked());
 
-        // 锁定期内即使密码正确也不放行
+        // 鎖定期內即使密碼正確也不放行
         $this->postJson('/api/auth/login', [
             'email' => 'member@example.com',
             'password' => 'Str0ngPass123',
@@ -114,7 +114,7 @@ final class LoginTest extends TestCase
     }
 
     #[Test]
-    public function 锁定会写入审计日志(): void
+    public function 鎖定會寫入審計日誌(): void
     {
         $this->user();
 
@@ -129,7 +129,7 @@ final class LoginTest extends TestCase
     }
 
     #[Test]
-    public function 成功登入后失败计数归零(): void
+    public function 成功登入後失敗計數歸零(): void
     {
         $user = $this->user();
 
@@ -149,7 +149,7 @@ final class LoginTest extends TestCase
     }
 
     #[Test]
-    public function 被停权的帐号无法登入(): void
+    public function 被停權的帳號無法登入(): void
     {
         $this->user();
         User::where('email', 'member@example.com')->update(['status' => 'disabled']);
@@ -165,7 +165,7 @@ final class LoginTest extends TestCase
     {
         $this->user();
 
-        // 走完整的登入→登出流程，才测得到 session 是否真的被作废
+        // 走完整的登入→登出流程，才測得到 session 是否真的被作廢
         $this->postJson('/api/auth/login', [
             'email' => 'member@example.com',
             'password' => 'Str0ngPass123',
@@ -175,18 +175,18 @@ final class LoginTest extends TestCase
 
         $this->postJson('/api/auth/logout')->assertOk();
 
-        // 测试进程内 auth guard 会缓存上一次解析出的 user，
-        // 不清掉的话后续断言看到的是陈旧状态而非真实的登出结果。
+        // 測試進程內 auth guard 會快取上一次解析出的 user，
+        // 不清掉的話後續斷言看到的是陳舊狀態而非真實的登出結果。
         $this->app['auth']->forgetGuards();
 
         $this->assertGuest();
 
-        // 登出后旧会话不能再取资料
+        // 登出後舊會話不能再取資料
         $this->getJson('/api/me')->assertStatus(401);
     }
 
     #[Test]
-    public function 未登入时无法取得个人资料(): void
+    public function 未登入時無法取得個人資料(): void
     {
         $this->getJson('/api/me')
             ->assertStatus(401)
@@ -194,7 +194,7 @@ final class LoginTest extends TestCase
     }
 
     #[Test]
-    public function 登入后可以取得个人资料且不含密码欄位(): void
+    public function 登入後可以取得個人資料且不含密碼欄位(): void
     {
         $user = $this->user();
 

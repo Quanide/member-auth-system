@@ -17,7 +17,7 @@ export function formatDate(value: string | null | undefined): string {
   return dayjs(value).format('YYYY-MM-DD')
 }
 
-/** 「3 分钟前」这类相对时间，用于活动列表 */
+/** 「3 分鐘前」這類相對時間，用於活動列表 */
 export function fromNow(value: string | null | undefined): string {
   if (!value) return '—'
 

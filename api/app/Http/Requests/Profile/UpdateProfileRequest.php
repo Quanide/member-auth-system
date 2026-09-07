@@ -22,7 +22,7 @@ final class UpdateProfileRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'min:2', 'max:50'],
             'nickname' => ['nullable', 'string', 'max:50'],
-            // 兼容大陆 / 台湾 / 国际号码，只做宽松格式约束
+            // 兼容大陸 / 臺灣 / 國際號碼，只做寬鬆格式約束
             'phone' => ['nullable', 'string', 'max:32', 'regex:/^[+]?[0-9\s\-()]{6,32}$/'],
             'birthday' => ['nullable', 'date', 'before:today', 'after:1900-01-01'],
             'gender' => ['nullable', Rule::in(['male', 'female', 'other'])],
@@ -37,11 +37,11 @@ final class UpdateProfileRequest extends FormRequest
     {
         return [
             'name' => '姓名',
-            'nickname' => '昵称',
-            'phone' => '手机号码',
+            'nickname' => '暱稱',
+            'phone' => '手機號碼',
             'birthday' => '生日',
-            'gender' => '性别',
-            'bio' => '个人简介',
+            'gender' => '性別',
+            'bio' => '個人簡介',
         ];
     }
 
@@ -51,15 +51,15 @@ final class UpdateProfileRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'phone.regex' => '手机号码格式不正确',
-            'birthday.before' => '生日必须早于今天',
+            'phone.regex' => '手機號碼格式不正確',
+            'birthday.before' => '生日必須早於今天',
         ];
     }
 
     protected function prepareForValidation(): void
     {
-        // 前端清空输入时会送空字符串，统一转成 null 再入库，
-        // 避免数据库里出现 '' 与 NULL 两种「没填」的表示。
+        // 前端清空輸入時會送空字符串，統一轉成 null 再入庫，
+        // 避免資料庫裡出現 '' 與 NULL 兩種「沒填」的表示。
         $normalized = [];
 
         foreach (['nickname', 'phone', 'birthday', 'gender', 'bio'] as $field) {

@@ -17,7 +17,7 @@ final class ChangePasswordTest extends TestCase
     use RefreshDatabase;
 
     #[Test]
-    public function 可以用正确的旧密码修改密码(): void
+    public function 可以用正確的舊密碼修改密碼(): void
     {
         $user = User::factory()->create(['password' => 'OldPass12345']);
 
@@ -31,7 +31,7 @@ final class ChangePasswordTest extends TestCase
     }
 
     #[Test]
-    public function 旧密码错误时拒绝(): void
+    public function 舊密碼錯誤時拒絕(): void
     {
         $user = User::factory()->create(['password' => 'OldPass12345']);
 
@@ -41,12 +41,12 @@ final class ChangePasswordTest extends TestCase
             'password_confirmation' => 'NewPass67890',
         ])->assertStatus(422)->assertJsonPath('code', 'PASSWORD_MISMATCH');
 
-        // 密码必须保持不变
+        // 密碼必須保持不變
         $this->assertTrue(Hash::check('OldPass12345', $user->fresh()->password));
     }
 
     #[Test]
-    public function 新密码不可与旧密码相同(): void
+    public function 新密碼不可與舊密碼相同(): void
     {
         $user = User::factory()->create(['password' => 'OldPass12345']);
 
@@ -58,7 +58,7 @@ final class ChangePasswordTest extends TestCase
     }
 
     #[Test]
-    public function 新密码强度不足时拒绝(): void
+    public function 新密碼強度不足時拒絕(): void
     {
         $user = User::factory()->create(['password' => 'OldPass12345']);
 
@@ -70,11 +70,11 @@ final class ChangePasswordTest extends TestCase
     }
 
     #[Test]
-    public function 改密后其他装置的会话被清除(): void
+    public function 改密後其他裝置的會話被清除(): void
     {
         $user = User::factory()->create(['password' => 'OldPass12345']);
 
-        // 模拟另一台装置的会话
+        // 模擬另一臺裝置的會話
         DB::table('sessions')->insert([
             'id' => 'other-device-session-id',
             'user_id' => $user->id,
@@ -94,7 +94,7 @@ final class ChangePasswordTest extends TestCase
     }
 
     #[Test]
-    public function 改密会写入审计日志(): void
+    public function 改密會寫入審計日誌(): void
     {
         $user = User::factory()->create(['password' => 'OldPass12345']);
 
@@ -111,7 +111,7 @@ final class ChangePasswordTest extends TestCase
     }
 
     #[Test]
-    public function 未登入无法改密(): void
+    public function 未登入無法改密(): void
     {
         $this->putJson('/api/me/password', [
             'current_password' => 'OldPass12345',

@@ -6,7 +6,7 @@ import type { User } from '@/types'
 
 export const useAuthStore = defineStore('auth', () => {
   const user = ref<User | null>(null)
-  /** 首次进站是否已尝试过恢复登入态，避免路由守卫重复请求 */
+  /** 首次進站是否已嘗試過恢復登入態，避免路由守衛重複請求 */
   const initialized = ref(false)
   const loading = ref(false)
 
@@ -15,7 +15,7 @@ export const useAuthStore = defineStore('auth', () => {
   const isAdmin = computed(() => user.value?.role === 'admin')
   const twoFactorEnabled = computed(() => user.value?.two_factor_enabled === true)
 
-  /** 应用启动时用 Cookie 换回当前用户；401 属预期结果，不当错误处理 */
+  /** 應用啟動時用 Cookie 換回當前使用者；401 屬預期結果，不當錯誤處理 */
   async function bootstrap(): Promise<void> {
     if (initialized.value) return
 
@@ -24,7 +24,7 @@ export const useAuthStore = defineStore('auth', () => {
       user.value = me
     } catch (error) {
       if (!(error instanceof ApiError) || error.status !== 401) {
-        console.error('恢复登入状态失败', error)
+        console.error('恢復登入狀態失敗', error)
       }
       user.value = null
     } finally {
@@ -32,12 +32,25 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  async function login(payload: LoginPayload): Promise<void> {
+  /**
+   * 登入。
+   * 啟用 2FA 的帳號在這一步不會建立完整登入狀態，
+   * 回傳 twoFactorRequired 讓頁面切到驗證碼那一關。
+   */
+  async function login(payload: LoginPayload): Promise<{ twoFactorRequired: boolean }> {
     loading.value = true
+
     try {
-      const { user: me } = await authApi.login(payload)
-      user.value = me
+      const result = await authApi.login(payload)
+
+      if (result.two_factor_required) {
+        return { twoFactorRequired: true }
+      }
+
+      user.value = result.user
       initialized.value = true
+
+      return { twoFactorRequired: false }
     } finally {
       loading.value = false
     }
@@ -58,13 +71,13 @@ export const useAuthStore = defineStore('auth', () => {
     try {
       await authApi.logout()
     } finally {
-      // 无论后端是否成功，前端一律清空本地状态
+      // 無論後端是否成功，前端一律清空本地狀態
       user.value = null
       resetCsrfCookie()
     }
   }
 
-  /** 资料更新后同步 store，避免各页面各自维护一份副本 */
+  /** 資料更新後同步 store，避免各頁面各自維護一份副本 */
   function setUser(next: User): void {
     user.value = next
   }

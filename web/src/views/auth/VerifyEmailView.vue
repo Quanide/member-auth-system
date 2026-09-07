@@ -1,25 +1,25 @@
 <template>
-  <AuthShell title="邮箱验证" narrow>
+  <AuthShell title="信箱驗證" narrow>
     <div v-if="state === 'pending'" class="state-box">
       <el-icon class="is-loading spin" :size="34"><Loading /></el-icon>
-      <p class="state-text">正在验证您的邮箱…</p>
+      <p class="state-text">正在驗證您的信箱…</p>
     </div>
 
-    <el-result v-else-if="state === 'success'" icon="success" title="验证成功">
+    <el-result v-else-if="state === 'success'" icon="success" title="驗證成功">
       <template #sub-title>
-        <p class="state-desc">您的邮箱已完成验证，现在可以使用完整功能。</p>
+        <p class="state-desc">您的信箱已完成驗證，現在可以使用完整功能。</p>
       </template>
       <template #extra>
-        <el-button type="primary" @click="goHome">进入会员中心</el-button>
+        <el-button type="primary" @click="goHome">進入會員中心</el-button>
       </template>
     </el-result>
 
-    <el-result v-else icon="error" title="验证失败">
+    <el-result v-else icon="error" title="驗證失敗">
       <template #sub-title>
         <p class="state-desc">{{ errorMessage }}</p>
       </template>
       <template #extra>
-        <el-button @click="goHome">返回会员中心</el-button>
+        <el-button @click="goHome">返回會員中心</el-button>
       </template>
     </el-result>
   </AuthShell>
@@ -39,7 +39,7 @@ const router = useRouter()
 const auth = useAuthStore()
 
 const state = ref<'pending' | 'success' | 'error'>('pending')
-const errorMessage = ref('验证连结无效或已过期，请重新申请验证信。')
+const errorMessage = ref('驗證連結無效或已過期，請重新申請驗證信。')
 
 function goHome(): void {
   router.push(auth.isAuthenticated ? { name: 'dashboard' } : { name: 'login' })
@@ -55,7 +55,7 @@ onMounted(async () => {
     typeof signature !== 'string'
   ) {
     state.value = 'error'
-    errorMessage.value = '连结缺少必要参数，请重新从邮件中点击验证连结。'
+    errorMessage.value = '連結缺少必要參數，請重新從郵件中點擊驗證連結。'
 
     return
   }
@@ -63,7 +63,7 @@ onMounted(async () => {
   try {
     await authApi.verifyEmail({ id, hash, expires, signature })
 
-    // 验证后同步登入态里的 email_verified，页面上的提示条才会消失
+    // 驗證後同步登入態裡的 email_verified，頁面上的提示條才會消失
     if (auth.isAuthenticated) {
       await auth.refresh().catch(() => undefined)
     }

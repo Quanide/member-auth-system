@@ -1,12 +1,12 @@
 <template>
   <AuthShell
-    title="忘记密码"
-    subtitle="输入注册时使用的邮箱，我们会寄出重设密码的连结"
+    title="忘記密碼"
+    subtitle="輸入註冊時使用的信箱，我們會寄出重設密碼的連結"
     narrow
   >
     <template v-if="!sent">
       <el-form ref="formRef" :model="form" :rules="rules" label-position="top" @submit.prevent="onSubmit">
-        <el-form-item label="邮箱" prop="email" :error="serverErrors.email">
+        <el-form-item label="信箱" prop="email" :error="serverErrors.email">
           <el-input
             v-model="form.email"
             type="email"
@@ -19,17 +19,17 @@
         </el-form-item>
 
         <el-button type="primary" size="large" class="submit-btn" :loading="submitting" @click="onSubmit">
-          寄出重设连结
+          寄出重設連結
         </el-button>
       </el-form>
     </template>
 
-    <el-result v-else icon="success" title="邮件已寄出">
+    <el-result v-else icon="success" title="郵件已寄出">
       <template #sub-title>
         <p class="result-desc">
-          若 <strong>{{ form.email }}</strong> 已注册，您会在几分钟内收到重设密码的连结。
+          若 <strong>{{ form.email }}</strong> 已註冊，您會在幾分鐘內收到重設密碼的連結。
         </p>
-        <p class="result-desc">没收到？请检查垃圾邮件匣，或稍后再试一次。</p>
+        <p class="result-desc">沒收到？請檢查垃圾郵件匣，或稍後再試一次。</p>
       </template>
     </el-result>
 
@@ -55,8 +55,8 @@ const form = reactive({ email: '' })
 
 const rules: FormRules = {
   email: [
-    { required: true, message: '请输入邮箱', trigger: 'blur' },
-    { type: 'email', message: '邮箱格式不正确', trigger: 'blur' },
+    { required: true, message: '請輸入信箱', trigger: 'blur' },
+    { type: 'email', message: '信箱格式不正確', trigger: 'blur' },
   ],
 }
 

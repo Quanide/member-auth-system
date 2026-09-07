@@ -26,7 +26,7 @@ final class AvatarController extends Controller
 
         return ApiResponse::ok([
             'user' => new UserResource($user->refresh()),
-            'message' => '头像已更新',
+            'message' => '頭像已更新',
         ]);
     }
 
@@ -39,7 +39,7 @@ final class AvatarController extends Controller
 
         return ApiResponse::ok([
             'user' => new UserResource($user->refresh()),
-            'message' => '头像已移除',
+            'message' => '頭像已移除',
         ]);
     }
 }

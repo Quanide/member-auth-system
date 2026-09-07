@@ -1,16 +1,16 @@
 <template>
   <div>
-    <h1 class="page-title">操作纪录</h1>
-    <p class="page-subtitle">您帐号上所有敏感操作的稽核轨迹</p>
+    <h1 class="page-title">操作紀錄</h1>
+    <p class="page-subtitle">您帳號上所有敏感操作的稽核軌跡</p>
 
     <el-card shadow="never" v-loading="loading">
       <template #header>
         <div class="card-header-row">
-          <span>纪录列表</span>
+          <span>紀錄列表</span>
           <div class="filters">
             <el-select
               v-model="filterAction"
-              placeholder="全部类型"
+              placeholder="全部型別"
               clearable
               size="small"
               style="width: 170px"
@@ -28,7 +28,7 @@
         </div>
       </template>
 
-      <el-empty v-if="!items.length && !loading" description="暂无纪录" :image-size="80" />
+      <el-empty v-if="!items.length && !loading" description="暫無紀錄" :image-size="80" />
 
       <template v-else>
         <el-table :data="items" size="small">
@@ -44,7 +44,7 @@
             <template #default="{ row }">{{ row.ip_address ?? '—' }}</template>
           </el-table-column>
 
-          <el-table-column label="装置" min-width="180">
+          <el-table-column label="裝置" min-width="180">
             <template #default="{ row }">
               <span class="ua-cell" :title="row.user_agent ?? ''">
                 {{ shortUserAgent(row.user_agent) }}
@@ -52,13 +52,13 @@
             </template>
           </el-table-column>
 
-          <el-table-column label="详情" min-width="150">
+          <el-table-column label="詳情" min-width="150">
             <template #default="{ row }">
               <span class="meta-cell">{{ describeMeta(row.meta) }}</span>
             </template>
           </el-table-column>
 
-          <el-table-column label="时间" width="230" align="right">
+          <el-table-column label="時間" width="230" align="right">
             <template #default="{ row }">
               <span class="time-cell">{{ formatDateTime(row.created_at) }}</span>
               <span class="time-rel">{{ fromNow(row.created_at) }}</span>
@@ -110,7 +110,7 @@ async function load(page = 1): Promise<void> {
     items.value = result.items
     pagination.value = result.pagination
   } catch (error) {
-    ElMessage.error(error instanceof ApiError ? error.message : '载入失败')
+    ElMessage.error(error instanceof ApiError ? error.message : '載入失敗')
   } finally {
     loading.value = false
   }
@@ -129,7 +129,7 @@ onMounted(async () => {
     const { actions: list } = await profileApi.activityActions()
     actions.value = list
   } catch {
-    // 筛选项载入失败不影响主列表，静默降级
+    // 篩選項載入失敗不影響主列表，靜默降級
   }
 
   await load()

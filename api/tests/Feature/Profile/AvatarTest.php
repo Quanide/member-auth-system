@@ -21,7 +21,7 @@ final class AvatarTest extends TestCase
         Storage::fake('public');
     }
 
-    /** 造一张真实可解码的图片，而不是 fake 出来的空壳 */
+    /** 造一張真實可解碼的圖片，而不是 fake 出來的空殼 */
     private function realImage(int $w = 800, int $h = 600): UploadedFile
     {
         $image = imagecreatetruecolor($w, $h);
@@ -35,14 +35,14 @@ final class AvatarTest extends TestCase
     }
 
     #[Test]
-    public function 可以上传头像(): void
+    public function 可以上傳頭像(): void
     {
         $user = User::factory()->create();
 
         $this->actingAs($user)
             ->postJson('/api/me/avatar', ['avatar' => $this->realImage()])
             ->assertOk()
-            ->assertJsonPath('data.message', '头像已更新');
+            ->assertJsonPath('data.message', '頭像已更新');
 
         $user->refresh();
 
@@ -51,7 +51,7 @@ final class AvatarTest extends TestCase
     }
 
     #[Test]
-    public function 上传后会被裁切成正方形(): void
+    public function 上傳後會被裁切成正方形(): void
     {
         $user = User::factory()->create();
 
@@ -60,12 +60,12 @@ final class AvatarTest extends TestCase
         $binary = Storage::disk('public')->get($user->fresh()->avatar_path);
         $size = getimagesizefromstring($binary);
 
-        $this->assertSame($size[0], $size[1], '输出应为正方形');
+        $this->assertSame($size[0], $size[1], '輸出應為正方形');
         $this->assertSame(512, $size[0]);
     }
 
     #[Test]
-    public function 更换头像时旧档案会被删除(): void
+    public function 更換頭像時舊檔案會被刪除(): void
     {
         $user = User::factory()->create();
 
@@ -81,7 +81,7 @@ final class AvatarTest extends TestCase
     }
 
     #[Test]
-    public function 可以移除头像(): void
+    public function 可以移除頭像(): void
     {
         $user = User::factory()->create();
 
@@ -95,11 +95,11 @@ final class AvatarTest extends TestCase
     }
 
     #[Test]
-    public function 拒绝伪装成图片的档案(): void
+    public function 拒絕偽裝成圖片的檔案(): void
     {
         $user = User::factory()->create();
 
-        // 副档名是 .png，内容其实是 PHP 脚本
+        // 副檔名是 .png，內容其實是 PHP 腳本
         $path = tempnam(sys_get_temp_dir(), 'evil').'.png';
         file_put_contents($path, '<?php echo "pwned"; ?>');
         $fake = new UploadedFile($path, 'evil.png', 'image/png', null, true);
@@ -112,7 +112,7 @@ final class AvatarTest extends TestCase
     }
 
     #[Test]
-    public function 拒绝超过大小上限的档案(): void
+    public function 拒絕超過大小上限的檔案(): void
     {
         $user = User::factory()->create();
 
@@ -123,7 +123,7 @@ final class AvatarTest extends TestCase
     }
 
     #[Test]
-    public function 未登入无法上传头像(): void
+    public function 未登入無法上傳頭像(): void
     {
         $this->postJson('/api/me/avatar', ['avatar' => $this->realImage()])->assertStatus(401);
     }

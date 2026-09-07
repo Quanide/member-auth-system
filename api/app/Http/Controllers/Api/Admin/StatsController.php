@@ -13,7 +13,7 @@ final class StatsController extends Controller
 {
     public function __construct(private readonly AdminStatsService $stats) {}
 
-    /** 看板一次取齐，避免前端开五个请求各自 loading */
+    /** 看板一次取齊，避免前端開五個請求各自 loading */
     public function index(): JsonResponse
     {
         return ApiResponse::ok([

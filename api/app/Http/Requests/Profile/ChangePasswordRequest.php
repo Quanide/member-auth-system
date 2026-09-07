@@ -31,8 +31,8 @@ final class ChangePasswordRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'current_password' => '目前密码',
-            'password' => '新密码',
+            'current_password' => '目前密碼',
+            'password' => '新密碼',
         ];
     }
 
@@ -42,8 +42,8 @@ final class ChangePasswordRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'password.different' => '新密码不能与目前密码相同',
-            'password.confirmed' => '两次输入的新密码不一致',
+            'password.different' => '新密碼不能與目前密碼相同',
+            'password.confirmed' => '兩次輸入的新密碼不一致',
         ];
     }
 }

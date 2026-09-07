@@ -15,7 +15,7 @@ use Illuminate\Validation\Rule;
 
 final class ActivityController extends Controller
 {
-    /** 会员查看自己的操作纪录 */
+    /** 會員查看自己的操作紀錄 */
     public function index(Request $request): JsonResponse
     {
         /** @var User $user */
@@ -45,7 +45,7 @@ final class ActivityController extends Controller
         ]);
     }
 
-    /** 供前端筛选下拉框使用 */
+    /** 供前端篩選下拉框使用 */
     public function actions(): JsonResponse
     {
         return ApiResponse::ok([

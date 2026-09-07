@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class AuditLog extends Model
 {
-    /** 只有 created_at，没有 updated_at：日志写入后不可变更 */
+    /** 只有 created_at，沒有 updated_at：日誌寫入後不可變更 */
     public const UPDATED_AT = null;
 
     protected $fillable = [

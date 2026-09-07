@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
 /**
- * 全站稽核日志检索（跨会员）。
+ * 全站稽核日誌檢索（跨會員）。
  */
 final class AuditController extends Controller
 {
@@ -30,7 +30,7 @@ final class AuditController extends Controller
         ]);
 
         $page = AuditLog::query()
-            // eager load 避免列表逐笔查使用者造成 N+1
+            // eager load 避免列表逐筆查使用者造成 N+1
             ->with('user:id,name,nickname,email')
             ->when(filled($filters['action'] ?? null), fn (Builder $q) => $q->where('action', $filters['action']))
             ->when(filled($filters['user_id'] ?? null), fn (Builder $q) => $q->where('user_id', $filters['user_id']))

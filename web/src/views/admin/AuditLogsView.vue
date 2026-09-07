@@ -1,14 +1,14 @@
 <template>
   <div>
     <h1 class="page-title">全站稽核</h1>
-    <p class="page-subtitle">跨会员检索所有敏感操作纪录</p>
+    <p class="page-subtitle">跨會員檢索所有敏感操作紀錄</p>
 
     <el-card shadow="never" v-loading="loading">
       <template #header>
         <div class="filters">
           <el-input
             v-model="filters.keyword"
-            placeholder="搜寻邮箱 / IP"
+            placeholder="搜尋信箱 / IP"
             clearable
             size="small"
             style="width: 200px"
@@ -18,7 +18,7 @@
           />
           <el-select
             v-model="filters.action"
-            placeholder="全部类型"
+            placeholder="全部型別"
             clearable
             filterable
             size="small"
@@ -37,8 +37,8 @@
             type="daterange"
             size="small"
             range-separator="至"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
+            start-placeholder="開始日期"
+            end-placeholder="結束日期"
             value-format="YYYY-MM-DD"
             style="width: 240px"
             @change="reload"
@@ -47,7 +47,7 @@
         </div>
       </template>
 
-      <el-empty v-if="!items.length && !loading" description="没有符合条件的纪录" :image-size="80" />
+      <el-empty v-if="!items.length && !loading" description="沒有符合條件的紀錄" :image-size="80" />
 
       <template v-else>
         <el-table :data="items" size="small">
@@ -59,13 +59,13 @@
             </template>
           </el-table-column>
 
-          <el-table-column label="会员" min-width="190">
+          <el-table-column label="會員" min-width="190">
             <template #default="{ row }">
               <div v-if="row.user" class="user-cell">
                 <span class="user-name">{{ row.user.display_name }}</span>
                 <span class="user-email">{{ row.user.email }}</span>
               </div>
-              <span v-else class="text-faint">（已删除或访客）</span>
+              <span v-else class="text-faint">（已刪除或訪客）</span>
             </template>
           </el-table-column>
 
@@ -75,19 +75,19 @@
             </template>
           </el-table-column>
 
-          <el-table-column label="装置" min-width="150">
+          <el-table-column label="裝置" min-width="150">
             <template #default="{ row }">
               <span class="dim" :title="row.user_agent ?? ''">{{ shortUserAgent(row.user_agent) }}</span>
             </template>
           </el-table-column>
 
-          <el-table-column label="详情" min-width="150">
+          <el-table-column label="詳情" min-width="150">
             <template #default="{ row }">
               <span class="dim">{{ describeMeta(row.meta) }}</span>
             </template>
           </el-table-column>
 
-          <el-table-column label="时间" width="175" align="right">
+          <el-table-column label="時間" width="175" align="right">
             <template #default="{ row }">
               <span class="mono dim">{{ formatDateTime(row.created_at) }}</span>
             </template>
@@ -145,7 +145,7 @@ async function load(page = 1): Promise<void> {
     items.value = result.items
     pagination.value = result.pagination
   } catch (error) {
-    ElMessage.error(error instanceof ApiError ? error.message : '载入失败')
+    ElMessage.error(error instanceof ApiError ? error.message : '載入失敗')
   } finally {
     loading.value = false
   }
@@ -157,10 +157,10 @@ function reload(): void {
 
 onMounted(async () => {
   try {
-    // 动作清单与会员端共用同一个端点
+    // 動作清單與會員端共用同一個端點
     actions.value = (await profileApi.activityActions()).actions
   } catch {
-    // 筛选项载入失败不影响主列表，静默降级
+    // 篩選項載入失敗不影響主列表，靜默降級
   }
 
   await load()

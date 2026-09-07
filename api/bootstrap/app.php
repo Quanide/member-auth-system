@@ -23,11 +23,11 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        // Sanctum SPA 模式：同源请求改用 session cookie 认证，并自动带上 CSRF 校验
+        // Sanctum SPA 模式：同源請求改用 session cookie 認證，並自動帶上 CSRF 校驗
         $middleware->statefulApi();
 
-        // 部署在 Nginx 反代之后，需信任代理头才能拿到真实客户端 IP 与 https scheme。
-        // 生产环境应把 '*' 收窄为反代的内网地址段。
+        // 部署在 Nginx 反代之後，需信任代理頭才能拿到真實用戶端 IP 與 https scheme。
+        // 生產環境應把 '*' 收窄為反代的內網地址段。
         $middleware->trustProxies(at: '*');
 
         $middleware->alias([
@@ -39,8 +39,8 @@ return Application::configure(basePath: dirname(__DIR__))
             fn (Request $request) => $request->is('api/*') || $request->expectsJson(),
         );
 
-        // 把框架抛出的各类异常统一收敛成 { ok:false, code, message } 结构，
-        // 前端只写一套错误处理即可。
+        // 把框架拋出的各類異常統一收斂成 { ok:false, code, message } 結構，
+        // 前端只寫一套錯誤處理即可。
         $exceptions->render(function (ValidationException $e, Request $request) {
             if (! $request->is('api/*') && ! $request->expectsJson()) {
                 return null;
@@ -48,7 +48,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
             return ApiResponse::error(
                 ErrorCode::VALIDATION_FAILED,
-                $e->validator->errors()->first() ?: '提交的资料有误',
+                $e->validator->errors()->first() ?: '提交的資料有誤',
                 422,
                 $e->errors(),
             );
@@ -59,7 +59,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 return null;
             }
 
-            return ApiResponse::error(ErrorCode::UNAUTHENTICATED, '请先登入', 401);
+            return ApiResponse::error(ErrorCode::UNAUTHENTICATED, '請先登入', 401);
         });
 
         $exceptions->render(function (AuthorizationException $e, Request $request) {
@@ -67,7 +67,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 return null;
             }
 
-            return ApiResponse::error(ErrorCode::FORBIDDEN, '没有权限执行此操作', 403);
+            return ApiResponse::error(ErrorCode::FORBIDDEN, '沒有權限執行此操作', 403);
         });
 
         $exceptions->render(function (ModelNotFoundException $e, Request $request) {
@@ -75,7 +75,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 return null;
             }
 
-            return ApiResponse::error(ErrorCode::NOT_FOUND, '找不到指定资源', 404);
+            return ApiResponse::error(ErrorCode::NOT_FOUND, '找不到指定資源', 404);
         });
 
         $exceptions->render(function (TooManyRequestsHttpException $e, Request $request) {
@@ -87,7 +87,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
             return ApiResponse::error(
                 ErrorCode::TOO_MANY_REQUESTS,
-                "操作过于频繁，请于 {$retryAfter} 秒后再试",
+                "操作過於頻繁，請於 {$retryAfter} 秒後再試",
                 429,
                 extra: ['retry_after' => $retryAfter],
             );
@@ -101,21 +101,21 @@ return Application::configure(basePath: dirname(__DIR__))
             return ApiResponse::error(ErrorCode::NOT_FOUND, '接口不存在', 404);
         });
 
-        // 兜底：未预期的异常一律 500，且绝不把堆栈或 SQL 泄露给客户端
+        // 兜底：未預期的異常一律 500，且絕不把堆棧或 SQL 洩露給用戶端
         $exceptions->render(function (Throwable $e, Request $request) {
             if (! $request->is('api/*') && ! $request->expectsJson()) {
                 return null;
             }
 
             if ($e instanceof HttpExceptionInterface) {
-                return null; // 交给上面已处理的分支或框架默认行为
+                return null; // 交給上面已處理的分支或框架預設行為
             }
 
             report($e);
 
             return ApiResponse::error(
                 ErrorCode::SERVER_ERROR,
-                config('app.debug') ? $e->getMessage() : '服务器发生错误，请稍后再试',
+                config('app.debug') ? $e->getMessage() : '伺服器發生錯誤，請稍後再試',
                 500,
             );
         });

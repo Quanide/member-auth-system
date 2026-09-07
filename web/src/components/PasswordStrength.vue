@@ -19,9 +19,9 @@ import { computed } from 'vue'
 const props = defineProps<{ password: string }>()
 
 /**
- * 前端强度提示。
- * 只是给用户的即时反馈，真正的强度门槛由后端 Password::defaults() 把关，
- * 绕过前端也无法提交弱密码。
+ * 前端強度提示。
+ * 只是給使用者的即時反饋，真正的強度門檻由後端 Password::defaults() 把關，
+ * 繞過前端也無法提交弱密碼。
  */
 const score = computed(() => {
   const pw = props.password
@@ -33,13 +33,13 @@ const score = computed(() => {
   if (/[a-z]/.test(pw) && /[A-Z]/.test(pw)) s++
   if (/\d/.test(pw) && /[^a-zA-Z0-9]/.test(pw)) s++
 
-  // 不满足基本要求时直接压到最低档，避免给出误导性的「中等」
+  // 不滿足基本要求時直接壓到最低檔，避免給出誤導性的「中等」
   if (pw.length < 8 || !/[a-zA-Z]/.test(pw) || !/\d/.test(pw)) return 1
 
   return Math.max(1, s)
 })
 
-const levelText = computed(() => ['', '弱', '一般', '良好', '很强'][score.value] ?? '')
+const levelText = computed(() => ['', '弱', '一般', '良好', '很強'][score.value] ?? '')
 
 const levelColor = computed(
   () => ['', '#F53F3F', '#FF7D00', '#6366F1', '#00B42A'][score.value] ?? '#C9CDD4',

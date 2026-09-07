@@ -19,7 +19,7 @@ final class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            // 登入时只做格式校验，不加 exists —— 帐号是否存在属于不该泄露的信息
+            // 登入時只做格式校驗，不加 exists —— 帳號是否存在屬於不該洩露的資訊
             'email' => ['required', 'string', 'email', 'max:255'],
             'password' => ['required', 'string'],
             'remember' => ['sometimes', 'boolean'],
@@ -32,8 +32,8 @@ final class LoginRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'email' => '邮箱',
-            'password' => '密码',
+            'email' => '信箱',
+            'password' => '密碼',
         ];
     }
 
@@ -44,7 +44,7 @@ final class LoginRequest extends FormRequest
         }
     }
 
-    /** 限流键：邮箱 + IP，既挡撞库也挡针对单一帐号的爆破 */
+    /** 限流鍵：信箱 + IP，既擋撞庫也擋針對單一帳號的爆破 */
     public function throttleKey(): string
     {
         return mb_strtolower($this->string('email')->value()).'|'.$this->ip();

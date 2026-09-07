@@ -1,9 +1,9 @@
 <template>
   <div class="notfound">
     <div class="code text-gradient">404</div>
-    <h1 class="title">页面不存在</h1>
-    <p class="desc">您访问的页面可能已被移除，或网址输入有误。</p>
-    <el-button type="primary" @click="goHome">回到首页</el-button>
+    <h1 class="title">頁面不存在</h1>
+    <p class="desc">您訪問的頁面可能已被移除，或網址輸入有誤。</p>
+    <el-button type="primary" @click="goHome">回到首頁</el-button>
   </div>
 </template>
 

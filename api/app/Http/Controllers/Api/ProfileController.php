@@ -17,7 +17,7 @@ final class ProfileController extends Controller
 {
     public function __construct(private readonly ProfileService $profiles) {}
 
-    /** 当前登入者的资料，前端启动时用它判断登入态 */
+    /** 當前登入者的資料，前端啟動時用它判斷登入態 */
     public function show(Request $request): JsonResponse
     {
         return ApiResponse::ok(['user' => new UserResource($request->user())]);
@@ -32,7 +32,7 @@ final class ProfileController extends Controller
 
         return ApiResponse::ok([
             'user' => new UserResource($updated),
-            'message' => '资料已更新',
+            'message' => '資料已更新',
         ]);
     }
 }

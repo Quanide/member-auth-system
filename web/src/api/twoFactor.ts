@@ -1,14 +1,14 @@
 import { request } from './client'
 
 export const twoFactorApi = {
-  /** 产生密钥与 QR Code，此时尚未启用 */
+  /** 產生密鑰與 QR Code，此時尚未啟用 */
   generate: () =>
     request<{ secret: string; qr_code: string; otpauth_url: string }>({
       url: '/me/two-factor/generate',
       method: 'post',
     }),
 
-  /** 输入验证码确认绑定，回传一次性恢复码 */
+  /** 輸入驗證碼確認綁定，回傳一次性恢復碼 */
   confirm: (code: string) =>
     request<{ recovery_codes: string[]; message: string }>({
       url: '/me/two-factor/confirm',
@@ -30,7 +30,7 @@ export const twoFactorApi = {
       data: { password },
     }),
 
-  /** 登入第二关 */
+  /** 登入第二關 */
   challenge: (code: string) =>
     request<{ user: import('@/types').User; message: string }>({
       url: '/auth/two-factor-challenge',

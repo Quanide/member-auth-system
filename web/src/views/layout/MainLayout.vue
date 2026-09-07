@@ -1,6 +1,6 @@
 <template>
   <div class="main-layout">
-    <!-- ── 侧边栏 ─────────────────────────────────── -->
+    <!-- ── 側邊欄 ─────────────────────────────────── -->
     <aside class="sidebar" :class="{ collapsed: isCollapsed, 'mobile-open': mobileOpen }">
       <div class="sidebar-glow" aria-hidden="true"></div>
       <div class="sidebar-noise" aria-hidden="true"></div>
@@ -21,7 +21,7 @@
         </div>
         <transition name="logo-text">
           <div v-show="!isCollapsed" class="logo-name-wrap">
-            <span class="logo-name">会员<em>中心</em></span>
+            <span class="logo-name">會員<em>中心</em></span>
             <span class="logo-sub">MEMBER CENTER</span>
           </div>
         </transition>
@@ -40,11 +40,11 @@
 
     <div v-if="mobileOpen" class="sidebar-overlay" @click="mobileOpen = false" />
 
-    <!-- ── 主体 ───────────────────────────────────── -->
+    <!-- ── 主體 ───────────────────────────────────── -->
     <div class="main-body">
       <header class="topbar">
         <div class="topbar-left">
-          <button class="mobile-menu-btn" aria-label="开启选单" @click="mobileOpen = !mobileOpen">
+          <button class="mobile-menu-btn" aria-label="開啟選單" @click="mobileOpen = !mobileOpen">
             <Menu :size="20" :stroke-width="2" />
           </button>
 
@@ -63,10 +63,10 @@
         </div>
 
         <div class="topbar-right">
-          <!-- 邮箱未验证时的常驻提醒 -->
+          <!-- 信箱未驗證時的常駐提醒 -->
           <button v-if="!auth.emailVerified" class="verify-btn" :disabled="resending" @click="resendVerification">
             <MailWarning :size="13" :stroke-width="1.75" />
-            {{ resending ? '寄送中…' : '邮箱待验证' }}
+            {{ resending ? '寄送中…' : '信箱待驗證' }}
           </button>
 
           <el-dropdown trigger="click" @command="handleCommand">
@@ -80,10 +80,10 @@
             <template #dropdown>
               <el-dropdown-menu>
                 <el-dropdown-item command="profile">
-                  <User :size="14" :stroke-width="1.75" /> 会员资料
+                  <User :size="14" :stroke-width="1.75" /> 會員資料
                 </el-dropdown-item>
                 <el-dropdown-item command="security">
-                  <Shield :size="14" :stroke-width="1.75" /> 帐号安全
+                  <Shield :size="14" :stroke-width="1.75" /> 帳號安全
                 </el-dropdown-item>
                 <el-dropdown-item command="logout" divided>
                   <LogOut :size="14" :stroke-width="1.75" /> 登出
@@ -95,15 +95,18 @@
       </header>
 
       <main class="content-area">
-        <router-view v-slot="{ Component, route }">
-          <transition name="page" mode="out-in">
-            <component :is="Component" :key="route.fullPath" />
-          </transition>
-        </router-view>
+        <!-- 内层限制最大宽度：超宽萤幕下内容才不会被拉散成一条 -->
+        <div class="content-inner">
+          <router-view v-slot="{ Component, route }">
+            <transition name="page" mode="out-in">
+              <component :is="Component" :key="route.fullPath" />
+            </transition>
+          </router-view>
+        </div>
       </main>
 
       <footer class="app-footer">
-        <span>会员登入系统 · Laravel {{ laravelVersion }} + Vue 3</span>
+        <span>會員登入系統 · Laravel {{ laravelVersion }} + Vue 3</span>
         <span class="footer-dot">·</span>
         <span>{{ new Date().getFullYear() }}</span>
       </footer>
@@ -167,7 +170,7 @@ async function resendVerification(): Promise<void> {
     const { message } = await authApi.resendVerification()
     ElMessage.success(message)
   } catch (error) {
-    ElMessage.error(error instanceof ApiError ? error.message : '寄送失败，请稍后再试')
+    ElMessage.error(error instanceof ApiError ? error.message : '寄送失敗，請稍後再試')
   } finally {
     resending.value = false
   }
@@ -176,7 +179,7 @@ async function resendVerification(): Promise<void> {
 async function handleCommand(command: string): Promise<void> {
   if (command === 'logout') {
     try {
-      await ElMessageBox.confirm('确定要登出吗？', '登出确认', {
+      await ElMessageBox.confirm('確定要登出嗎？', '登出確認', {
         confirmButtonText: '登出',
         cancelButtonText: '取消',
         type: 'warning',
@@ -207,7 +210,7 @@ async function handleCommand(command: string): Promise<void> {
   overflow: hidden;
 }
 
-// ── 侧边栏 ─────────────────────────────────────────
+// ── 側邊欄 ─────────────────────────────────────────
 .sidebar {
   position: relative;
   display: flex;
@@ -386,7 +389,7 @@ async function handleCommand(command: string): Promise<void> {
   z-index: 9;
 }
 
-// ── 主体 ───────────────────────────────────────────
+// ── 主體 ───────────────────────────────────────────
 .main-body {
   flex: 1;
   display: flex;
@@ -541,6 +544,11 @@ async function handleCommand(command: string): Promise<void> {
   padding: 24px;
 }
 
+.content-inner {
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
 .app-footer {
   display: flex;
   align-items: center;
@@ -557,7 +565,7 @@ async function handleCommand(command: string): Promise<void> {
   opacity: 0.6;
 }
 
-// ── 响应式 ─────────────────────────────────────────
+// ── 響應式 ─────────────────────────────────────────
 @media (max-width: 768px) {
   .sidebar {
     position: fixed;

@@ -28,10 +28,10 @@ final class EmailChangeController extends Controller
             $request->string('current_password')->value(),
         );
 
-        return ApiResponse::message('验证信已寄至新邮箱，请于 60 分钟内点击连结完成变更');
+        return ApiResponse::message('驗證信已寄至新信箱，請於 60 分鐘內點擊連結完成變更');
     }
 
-    /** 新邮箱收到的连结会带 token 打到这里，无需登入态即可完成 */
+    /** 新信箱收到的連結會帶 token 打到這裡，無需登入態即可完成 */
     public function confirm(Request $request): JsonResponse
     {
         $token = $request->string('token')->value();
@@ -40,7 +40,7 @@ final class EmailChangeController extends Controller
 
         return ApiResponse::ok([
             'user' => new UserResource($user),
-            'message' => '邮箱变更成功',
+            'message' => '信箱變更成功',
         ]);
     }
 }

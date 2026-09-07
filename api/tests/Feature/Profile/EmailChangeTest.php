@@ -17,7 +17,7 @@ final class EmailChangeTest extends TestCase
     use RefreshDatabase;
 
     #[Test]
-    public function 可以申请变更邮箱(): void
+    public function 可以申請變更信箱(): void
     {
         Notification::fake();
         $user = User::factory()->create(['email' => 'old@example.com', 'password' => 'Str0ngPass123']);
@@ -27,14 +27,14 @@ final class EmailChangeTest extends TestCase
             'current_password' => 'Str0ngPass123',
         ])->assertOk();
 
-        // 验证通过前，帐号邮箱不能被改动
+        // 驗證通過前，帳號信箱不能被改動
         $this->assertSame('old@example.com', $user->fresh()->email);
         $this->assertDatabaseHas('email_change_requests', ['new_email' => 'new@example.com']);
         Notification::assertSentTo($user, VerifyNewEmail::class);
     }
 
     #[Test]
-    public function 密码错误时无法申请变更(): void
+    public function 密碼錯誤時無法申請變更(): void
     {
         $user = User::factory()->create(['password' => 'Str0ngPass123']);
 
@@ -47,7 +47,7 @@ final class EmailChangeTest extends TestCase
     }
 
     #[Test]
-    public function 邮箱已被他人使用时拒绝(): void
+    public function 信箱已被他人使用時拒絕(): void
     {
         $user = User::factory()->create(['password' => 'Str0ngPass123']);
         User::factory()->create(['email' => 'taken@example.com']);
@@ -59,7 +59,7 @@ final class EmailChangeTest extends TestCase
     }
 
     #[Test]
-    public function 未验证邮箱的帐号不能申请变更(): void
+    public function 未驗證信箱的帳號不能申請變更(): void
     {
         $user = User::factory()->unverified()->create(['password' => 'Str0ngPass123']);
 
@@ -70,7 +70,7 @@ final class EmailChangeTest extends TestCase
     }
 
     #[Test]
-    public function 用有效token可以完成变更(): void
+    public function 用有效token可以完成變更(): void
     {
         Notification::fake();
         $user = User::factory()->create(['email' => 'old@example.com', 'password' => 'Str0ngPass123']);
@@ -119,7 +119,7 @@ final class EmailChangeTest extends TestCase
     }
 
     #[Test]
-    public function 过期的token被拒绝(): void
+    public function 過期的token被拒絕(): void
     {
         Notification::fake();
         $user = User::factory()->create(['password' => 'Str0ngPass123']);
@@ -144,7 +144,7 @@ final class EmailChangeTest extends TestCase
     }
 
     #[Test]
-    public function token以雜湊储存而非明文(): void
+    public function token以雜湊儲存而非明文(): void
     {
         Notification::fake();
         $user = User::factory()->create(['password' => 'Str0ngPass123']);

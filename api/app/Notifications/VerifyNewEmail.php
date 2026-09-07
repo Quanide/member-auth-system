@@ -10,8 +10,8 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 /**
- * 变更邮箱的验证信。
- * 寄往「新地址」而非帐号现址——只有真正能收信的人才能完成变更。
+ * 變更信箱的驗證信。
+ * 寄往「新地址」而非帳號現址——只有真正能收信的人才能完成變更。
  */
 final class VerifyNewEmail extends Notification implements ShouldQueue
 {
@@ -36,16 +36,16 @@ final class VerifyNewEmail extends Notification implements ShouldQueue
             .'/email-change/confirm?token='.urlencode($this->token);
 
         return (new MailMessage)
-            ->subject('请验证您的新邮箱 — '.config('app.name'))
+            ->subject('請驗證您的新信箱 — '.config('app.name'))
             ->greeting('您好，')
-            ->line('我们收到了将帐号邮箱变更为 '.$this->newEmail.' 的申请。')
-            ->action('确认变更', $url)
-            ->line('此连结 60 分钟内有效。')
-            ->line('若这不是您本人的操作，请忽略本邮件，并尽快修改密码。')
+            ->line('我們收到了將帳號信箱變更為 '.$this->newEmail.' 的申請。')
+            ->action('確認變更', $url)
+            ->line('此連結 60 分鐘內有效。')
+            ->line('若這不是您本人的操作，請忽略本郵件，並儘快修改密碼。')
             ->salutation('— '.config('app.name'));
     }
 
-    /** 寄到新邮箱，而不是 notifiable 上的现有邮箱 */
+    /** 寄到新信箱，而不是 notifiable 上的現有信箱 */
     public function routeNotificationForMail(object $notifiable): string
     {
         return $this->newEmail;

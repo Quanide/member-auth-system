@@ -12,9 +12,9 @@ final class ProfileService
     public function __construct(private readonly AuditLogger $audit) {}
 
     /**
-     * 更新会员资料。
-     * 只记录「真正发生变化」的字段名到审计日志——不记录值本身，
-     * 避免把手机号、生日这类个资明文堆进日志表。
+     * 更新會員資料。
+     * 只記錄「真正發生變化」的欄位名到審計日誌——不記錄值本身，
+     * 避免把手機號、生日這類個資明文堆進日誌表。
      *
      * @param  array<string, mixed>  $data
      */

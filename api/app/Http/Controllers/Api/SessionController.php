@@ -34,10 +34,10 @@ final class SessionController extends Controller
         $revoked = $this->sessions->revoke($user, $id, $request->session()->getId());
 
         if (! $revoked) {
-            return ApiResponse::error(ErrorCode::NOT_FOUND, '找不到该登入纪录，或无法登出目前装置', 404);
+            return ApiResponse::error(ErrorCode::NOT_FOUND, '找不到該登入紀錄，或無法登出目前裝置', 404);
         }
 
-        return ApiResponse::message('该装置已被登出');
+        return ApiResponse::message('該裝置已被登出');
     }
 
     public function destroyOthers(Request $request): JsonResponse
@@ -47,6 +47,6 @@ final class SessionController extends Controller
 
         $count = $this->sessions->revokeOthers($user, $request->session()->getId());
 
-        return ApiResponse::message("已登出其他 {$count} 个装置");
+        return ApiResponse::message("已登出其他 {$count} 個裝置");
     }
 }

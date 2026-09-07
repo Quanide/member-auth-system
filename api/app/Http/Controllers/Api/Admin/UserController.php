@@ -44,7 +44,7 @@ final class UserController extends Controller
         ]);
     }
 
-    /** 会员详情：附带登入装置与最近操作，方便管理员排查问题 */
+    /** 會員詳情：附帶登入裝置與最近操作，方便管理員排查問題 */
     public function show(User $user): JsonResponse
     {
         return ApiResponse::ok([
@@ -70,7 +70,7 @@ final class UserController extends Controller
 
         return ApiResponse::ok([
             'user' => new UserResource($updated),
-            'message' => '会员状态已更新',
+            'message' => '會員狀態已更新',
         ]);
     }
 
@@ -88,7 +88,7 @@ final class UserController extends Controller
 
         return ApiResponse::ok([
             'user' => new UserResource($updated),
-            'message' => '会员角色已更新',
+            'message' => '會員角色已更新',
         ]);
     }
 
@@ -98,7 +98,7 @@ final class UserController extends Controller
 
         return ApiResponse::ok([
             'user' => new UserResource($updated),
-            'message' => '已解除锁定',
+            'message' => '已解除鎖定',
         ]);
     }
 
@@ -106,13 +106,13 @@ final class UserController extends Controller
     {
         $count = $this->users->forceLogout($request->user(), $user);
 
-        return ApiResponse::message("已强制登出 {$count} 个装置");
+        return ApiResponse::message("已強制登出 {$count} 個裝置");
     }
 
     public function destroy(Request $request, User $user): JsonResponse
     {
         $this->users->delete($request->user(), $user);
 
-        return ApiResponse::message('会员已删除');
+        return ApiResponse::message('會員已刪除');
     }
 }

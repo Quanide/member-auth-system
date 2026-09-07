@@ -18,24 +18,24 @@ final class UpdateProfileTest extends TestCase
     private function payload(array $overrides = []): array
     {
         return array_merge([
-            'name' => '陈大文',
+            'name' => '陳大文',
             'nickname' => '大文',
             'phone' => '0912345678',
             'birthday' => '1995-06-15',
             'gender' => 'male',
-            'bio' => '喜欢写程式与爬山。',
+            'bio' => '喜歡寫程式與爬山。',
         ], $overrides);
     }
 
     #[Test]
-    public function 可以更新会员资料(): void
+    public function 可以更新會員資料(): void
     {
         $user = User::factory()->create();
 
         $this->actingAs($user)
             ->patchJson('/api/me', $this->payload())
             ->assertOk()
-            ->assertJsonPath('data.user.name', '陈大文')
+            ->assertJsonPath('data.user.name', '陳大文')
             ->assertJsonPath('data.user.nickname', '大文')
             ->assertJsonPath('data.user.phone', '0912345678')
             ->assertJsonPath('data.user.birthday', '1995-06-15')
@@ -43,19 +43,19 @@ final class UpdateProfileTest extends TestCase
 
         $this->assertDatabaseHas('users', [
             'id' => $user->id,
-            'name' => '陈大文',
+            'name' => '陳大文',
             'nickname' => '大文',
         ]);
     }
 
     #[Test]
-    public function 未登入无法更新资料(): void
+    public function 未登入無法更新資料(): void
     {
         $this->patchJson('/api/me', $this->payload())->assertStatus(401);
     }
 
     #[Test]
-    public function 无法透过更新资料接口改动邮箱与角色(): void
+    public function 無法透過更新資料接口改動信箱與角色(): void
     {
         $user = User::factory()->create([
             'email' => 'original@example.com',
@@ -70,14 +70,14 @@ final class UpdateProfileTest extends TestCase
 
         $user->refresh();
 
-        // fillable 白名单挡住了越权欄位
+        // fillable 白名單擋住了越權欄位
         $this->assertSame('original@example.com', $user->email);
         $this->assertSame('member', $user->role->value);
         $this->assertSame('active', $user->status->value);
     }
 
     #[Test]
-    public function 姓名为必填(): void
+    public function 姓名為必填(): void
     {
         $user = User::factory()->create();
 
@@ -88,7 +88,7 @@ final class UpdateProfileTest extends TestCase
     }
 
     #[Test]
-    public function 手机格式错误时拒绝(): void
+    public function 手機格式錯誤時拒絕(): void
     {
         $user = User::factory()->create();
 
@@ -99,7 +99,7 @@ final class UpdateProfileTest extends TestCase
     }
 
     #[Test]
-    public function 生日不可为未来日期(): void
+    public function 生日不可為未來日期(): void
     {
         $user = User::factory()->create();
 
@@ -110,7 +110,7 @@ final class UpdateProfileTest extends TestCase
     }
 
     #[Test]
-    public function 简介超过长度上限时拒绝(): void
+    public function 簡介超過長度上限時拒絕(): void
     {
         $user = User::factory()->create();
 
@@ -121,9 +121,9 @@ final class UpdateProfileTest extends TestCase
     }
 
     #[Test]
-    public function 空字串会被正规化为null(): void
+    public function 空字串會被正規化為null(): void
     {
-        $user = User::factory()->create(['nickname' => '旧昵称']);
+        $user = User::factory()->create(['nickname' => '舊暱稱']);
 
         $this->actingAs($user)
             ->patchJson('/api/me', $this->payload(['nickname' => '', 'bio' => '']))
@@ -136,7 +136,7 @@ final class UpdateProfileTest extends TestCase
     }
 
     #[Test]
-    public function 更新资料会写入审计日志且只记录欄位名(): void
+    public function 更新資料會寫入審計日誌且只記錄欄位名(): void
     {
         $user = User::factory()->create(['name' => '原名']);
 
@@ -148,12 +148,12 @@ final class UpdateProfileTest extends TestCase
 
         $this->assertArrayHasKey('fields', $log->meta);
         $this->assertContains('name', $log->meta['fields']);
-        // 日志里不该出现手机号这类个资明文
+        // 日誌裡不該出現手機號這類個資明文
         $this->assertStringNotContainsString('0912345678', json_encode($log->meta));
     }
 
     #[Test]
-    public function 没有实际变更时不写日志(): void
+    public function 沒有實際變更時不寫日誌(): void
     {
         $user = User::factory()->create($this->payload(['birthday' => '1995-06-15']));
 

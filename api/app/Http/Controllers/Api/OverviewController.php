@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 /**
- * 会员中心首页概览：把「帐号安全状态」一屏说清楚。
+ * 會員中心首頁概覽：把「帳號安全狀態」一屏說清楚。
  */
 final class OverviewController extends Controller
 {
@@ -54,7 +54,7 @@ final class OverviewController extends Controller
         ]);
     }
 
-    /** 资料完整度，用来在首页引导用户补全 */
+    /** 資料完整度，用來在首頁引導使用者補全 */
     private function completeness(User $user): int
     {
         $fields = [

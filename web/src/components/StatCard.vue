@@ -24,7 +24,7 @@ const props = withDefaults(
     color?: string
     tint?: string
     suffix?: string
-    /** 数字滚动动画时长（毫秒），设 0 关闭 */
+    /** 數字滾動動畫時長（毫秒），設 0 關閉 */
     duration?: number
   }>(),
   {
@@ -35,7 +35,7 @@ const props = withDefaults(
   },
 )
 
-// 数字滚动：让看板载入时有生命感，但不影响可读性
+// 數字滾動：讓看板載入時有生命感，但不影響可讀性
 const current = ref(0)
 const display = computed(() => Math.round(current.value).toLocaleString('zh-CN'))
 
@@ -51,7 +51,7 @@ function animate(to: number): void {
 
   const step = (now: number): void => {
     const progress = Math.min(1, (now - start) / props.duration)
-    // easeOutCubic：开头快、结尾稳
+    // easeOutCubic：開頭快、結尾穩
     current.value = from + (to - from) * (1 - Math.pow(1 - progress, 3))
 
     if (progress < 1) requestAnimationFrame(step)

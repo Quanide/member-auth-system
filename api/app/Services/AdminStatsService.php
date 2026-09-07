@@ -12,10 +12,10 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
 /**
- * 管理端看板统计。
+ * 管理端看板統計。
  *
- * 日期分组统一用 DATE()，MySQL 与 SQLite（测试环境）都支援，
- * 不必为两种驱动各写一份 SQL。
+ * 日期分組統一用 DATE()，MySQL 與 SQLite（測試環境）都支援，
+ * 不必為兩種驅動各寫一份 SQL。
  */
 final class AdminStatsService
 {
@@ -32,14 +32,14 @@ final class AdminStatsService
             'unverified' => User::whereNull('email_verified_at')->count(),
             'locked' => User::whereNotNull('locked_until')->where('locked_until', '>', now())->count(),
             'disabled' => User::where('status', UserStatus::Disabled)->count(),
-            // 有活跃 session 的不重复会员数
+            // 有活躍 session 的不重複會員數
             'online' => DB::table('sessions')->whereNotNull('user_id')->distinct()->count('user_id'),
             'active_7d' => User::where('last_login_at', '>=', $today->copy()->subDays(7))->count(),
         ];
     }
 
     /**
-     * 注册趋势。补齐没有资料的日期，否则前端折线图会出现断点。
+     * 註冊趨勢。補齊沒有資料的日期，否則前端折線圖會出現斷點。
      *
      * @return array<int, array{date: string, count: int}>
      */
@@ -57,7 +57,7 @@ final class AdminStatsService
     }
 
     /**
-     * 登入成功 / 失败趋势。
+     * 登入成功 / 失敗趨勢。
      *
      * @return array<string, mixed>
      */
@@ -83,7 +83,7 @@ final class AdminStatsService
     }
 
     /**
-     * 会员状态分布，供圆环图使用。
+     * 會員狀態分布，供圓環圖使用。
      *
      * @return array<int, array{name: string, value: int}>
      */
@@ -107,7 +107,7 @@ final class AdminStatsService
     }
 
     /**
-     * 登入装置分布，从稽核日志的 User-Agent 粗略归类。
+     * 登入裝置分布，從稽核日誌的 User-Agent 粗略歸類。
      *
      * @return array<int, array{name: string, value: int}>
      */
@@ -144,7 +144,7 @@ final class AdminStatsService
     }
 
     /**
-     * 补齐日期区间。
+     * 補齊日期區間。
      *
      * @param  callable(string): int  $resolver
      * @return array<int, mixed>

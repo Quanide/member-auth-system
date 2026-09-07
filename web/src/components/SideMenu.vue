@@ -54,30 +54,30 @@ interface MenuItem {
   icon: Component
 }
 
-// 管理端选单只对 admin 显示；这是体验层的处理，
-// 一般会员就算手动打 URL，后端 middleware 一样会挡下来。
+// 管理端選單只對 admin 顯示；這是體驗層的處理，
+// 一般會員就算手動打 URL，後端 middleware 一樣會擋下來。
 const sections = computed<Array<{ label: string; items: MenuItem[] }>>(() => {
   const base = [
     {
-      label: '总览',
-      items: [{ name: 'dashboard', label: '会员总览', icon: LayoutDashboard }],
+      label: '總覽',
+      items: [{ name: 'dashboard', label: '會員總覽', icon: LayoutDashboard }],
     },
     {
-      label: '帐号管理',
+      label: '帳號管理',
       items: [
-        { name: 'profile', label: '会员资料', icon: UserCog },
-        { name: 'security', label: '帐号安全', icon: Shield },
-        { name: 'activity', label: '操作纪录', icon: Activity },
+        { name: 'profile', label: '會員資料', icon: UserCog },
+        { name: 'security', label: '帳號安全', icon: Shield },
+        { name: 'activity', label: '操作紀錄', icon: Activity },
       ],
     },
   ]
 
   if (auth.isAdmin) {
     base.push({
-      label: '系统管理',
+      label: '系統管理',
       items: [
-        { name: 'admin-dashboard', label: '数据看板', icon: BarChart3 },
-        { name: 'admin-users', label: '会员管理', icon: Users },
+        { name: 'admin-dashboard', label: '數據看板', icon: BarChart3 },
+        { name: 'admin-users', label: '會員管理', icon: Users },
         { name: 'admin-audit-logs', label: '全站稽核', icon: ScrollText },
       ],
     })
@@ -88,7 +88,7 @@ const sections = computed<Array<{ label: string; items: MenuItem[] }>>(() => {
 
 function handleClick(navigate: () => void): void {
   navigate()
-  // 手机版点完自动收起抽屉
+  // 手機版點完自動收起抽屜
   emit('navigate')
 }
 </script>
@@ -140,7 +140,7 @@ function handleClick(navigate: () => void): void {
   user-select: none;
   overflow: hidden;
 
-  // 左侧激活竖条
+  // 左側激活豎條
   &::before {
     content: '';
     position: absolute;

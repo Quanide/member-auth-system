@@ -23,18 +23,18 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 | API 路由
 |--------------------------------------------------------------------------
-| 认证走 Sanctum 的 SPA 模式：前后端同域部署，凭证放在 httpOnly Cookie 里，
-| 前端 JS 读不到 token，配合 CSRF token 抵御跨站请求伪造。
+| 認證走 Sanctum 的 SPA 模式：前後端同域部署，憑證放在 httpOnly Cookie 裡，
+| 前端 JS 讀不到 token，配合 CSRF token 抵禦跨站請求偽造。
 */
 
-// ── 访客可用 ──────────────────────────────────────────────
+// ── 訪客可用 ──────────────────────────────────────────────
 Route::prefix('auth')->group(function (): void {
     Route::post('register', [RegisterController::class, 'store'])
-        ->middleware('throttle:6,60')          // 同 IP 每小时最多 6 次注册
+        ->middleware('throttle:6,60')          // 同 IP 每小時最多 6 次註冊
         ->name('auth.register');
 
     Route::post('login', [LoginController::class, 'store'])
-        ->middleware('throttle:20,1')          // 粗粒度兜底，细粒度在控制器内按帐号计
+        ->middleware('throttle:20,1')          // 粗粒度兜底，細粒度在控制器內按帳號計
         ->name('auth.login');
 
     Route::post('password/forgot', [PasswordResetController::class, 'sendLink'])
@@ -45,18 +45,18 @@ Route::prefix('auth')->group(function (): void {
         ->middleware('throttle:10,60')
         ->name('auth.password.reset');
 
-    // 双因素第二关：密码已通过但尚未建立登入状态，因此放在公开区
+    // 雙因素第二關：密碼已通過但尚未建立登入狀態，因此放在公開區
     Route::post('two-factor-challenge', [LoginController::class, 'twoFactorChallenge'])
         ->middleware('throttle:20,1')
         ->name('auth.two-factor.challenge');
 
-    // 邮件里的验证连结：signed 中间件校验签名与过期时间
+    // 郵件裡的驗證連結：signed 中間件校驗籤名與過期時間
     Route::get('email/verify/{id}/{hash}', [EmailVerificationController::class, 'verify'])
         ->middleware(['signed', 'throttle:10,1'])
         ->name('verification.verify');
 });
 
-// 变更邮箱的确认连结寄到新邮箱，此时用户可能未登入，故放在公开区
+// 變更信箱的確認連結寄到新信箱，此時使用者可能未登入，故放在公開區
 Route::post('email-change/confirm', [EmailChangeController::class, 'confirm'])
     ->middleware('throttle:10,60')
     ->name('email-change.confirm');
@@ -83,12 +83,12 @@ Route::middleware('auth:sanctum')->group(function (): void {
             ->middleware('throttle:10,60')
             ->name('me.password.update');
 
-        // 变更邮箱要求邮箱已验证：否则等于让未验证帐号随意换入口
+        // 變更信箱要求信箱已驗證：否則等於讓未驗證帳號隨意換入口
         Route::post('email-change', [EmailChangeController::class, 'request'])
             ->middleware(['verified', 'throttle:5,60'])
             ->name('me.email-change');
 
-        // 双因素认证
+        // 雙因素認證
         Route::prefix('two-factor')->group(function (): void {
             Route::post('generate', [TwoFactorController::class, 'generate'])
                 ->middleware('throttle:10,60')
@@ -117,7 +117,7 @@ Route::middleware('auth:sanctum')->group(function (): void {
 });
 
 // ── 管理端（需 admin 角色）────────────────────────────────
-// 权限由 middleware 把关，与前端选单是否显示无关
+// 權限由 middleware 把關，與前端選單是否顯示無關
 Route::middleware(['auth:sanctum', 'admin'])->prefix('admin')->group(function (): void {
     Route::get('stats', [AdminStatsController::class, 'index'])->name('admin.stats');
 

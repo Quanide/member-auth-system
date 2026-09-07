@@ -27,7 +27,7 @@ final class SessionManagementTest extends TestCase
     }
 
     #[Test]
-    public function 可以列出登入中的装置(): void
+    public function 可以列出登入中的裝置(): void
     {
         $user = User::factory()->create();
         $this->seedSession($user, 'device-alpha-session');
@@ -39,7 +39,7 @@ final class SessionManagementTest extends TestCase
     }
 
     #[Test]
-    public function 不会回传完整的session_id(): void
+    public function 不會回傳完整的session_id(): void
     {
         $user = User::factory()->create();
         $this->seedSession($user, 'a-very-long-session-identifier-value');
@@ -53,7 +53,7 @@ final class SessionManagementTest extends TestCase
     }
 
     #[Test]
-    public function 看不到其他人的登入纪录(): void
+    public function 看不到其他人的登入紀錄(): void
     {
         $user = User::factory()->create();
         $other = User::factory()->create();
@@ -67,7 +67,7 @@ final class SessionManagementTest extends TestCase
     }
 
     #[Test]
-    public function 可以登出其他所有装置(): void
+    public function 可以登出其他所有裝置(): void
     {
         $user = User::factory()->create();
         $this->seedSession($user, 'device-alpha-session');
@@ -80,7 +80,7 @@ final class SessionManagementTest extends TestCase
     }
 
     #[Test]
-    public function 无法撤销他人的会话(): void
+    public function 無法撤銷他人的會話(): void
     {
         $user = User::factory()->create();
         $other = User::factory()->create();
@@ -94,7 +94,7 @@ final class SessionManagementTest extends TestCase
     }
 
     #[Test]
-    public function 可以查询自己的操作纪录(): void
+    public function 可以查詢自己的操作紀錄(): void
     {
         $user = User::factory()->create(['password' => 'Str0ngPass123']);
 
@@ -110,7 +110,7 @@ final class SessionManagementTest extends TestCase
     }
 
     #[Test]
-    public function 看不到他人的操作纪录(): void
+    public function 看不到他人的操作紀錄(): void
     {
         $user = User::factory()->create();
         $other = User::factory()->create();

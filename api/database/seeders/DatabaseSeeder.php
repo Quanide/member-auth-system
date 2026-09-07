@@ -12,23 +12,23 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // 供评审直接登入体验的示范帐号
+        // 供評審直接登入體驗的示範帳號
         User::firstOrCreate(
             ['email' => 'demo@wanghui.aipod.works'],
             [
-                'name' => '示范会员',
+                'name' => '示範會員',
                 'nickname' => 'Demo',
                 'password' => 'Demo12345',
                 'email_verified_at' => now(),
                 'role' => UserRole::Member,
-                'bio' => '这是用于展示的示范帐号，可自由修改资料体验功能。',
+                'bio' => '這是用於展示的示範帳號，可自由修改資料體驗功能。',
             ],
         );
 
         User::firstOrCreate(
             ['email' => 'admin@wanghui.aipod.works'],
             [
-                'name' => '系统管理员',
+                'name' => '系統管理員',
                 'nickname' => 'Admin',
                 'password' => 'Admin12345',
                 'email_verified_at' => now(),

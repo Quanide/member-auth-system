@@ -15,7 +15,7 @@ final class TwoFactorController extends Controller
 {
     public function __construct(private readonly TwoFactorService $twoFactor) {}
 
-    /** 产生密钥与 QR Code（尚未启用） */
+    /** 產生密鑰與 QR Code（尚未啟用） */
     public function generate(Request $request): JsonResponse
     {
         /** @var User $user */
@@ -24,7 +24,7 @@ final class TwoFactorController extends Controller
         return ApiResponse::ok($this->twoFactor->generate($user));
     }
 
-    /** 输入验证码确认绑定，回传一次性恢复码 */
+    /** 輸入驗證碼確認綁定，回傳一次性恢復碼 */
     public function confirm(Request $request): JsonResponse
     {
         $validated = $request->validate([
@@ -38,7 +38,7 @@ final class TwoFactorController extends Controller
 
         return ApiResponse::ok([
             'recovery_codes' => $codes,
-            'message' => '双因素认证已启用，请妥善保存恢复码',
+            'message' => '雙因素認證已啟用，請妥善保存恢復碼',
         ]);
     }
 
@@ -53,7 +53,7 @@ final class TwoFactorController extends Controller
 
         $this->twoFactor->disable($user, $validated['password']);
 
-        return ApiResponse::message('双因素认证已关闭');
+        return ApiResponse::message('雙因素認證已關閉');
     }
 
     public function regenerateRecoveryCodes(Request $request): JsonResponse
@@ -69,7 +69,7 @@ final class TwoFactorController extends Controller
 
         return ApiResponse::ok([
             'recovery_codes' => $codes,
-            'message' => '恢复码已重新产生，旧的已失效',
+            'message' => '恢復碼已重新產生，舊的已失效',
         ]);
     }
 }

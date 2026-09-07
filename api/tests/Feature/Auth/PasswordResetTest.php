@@ -17,7 +17,7 @@ final class PasswordResetTest extends TestCase
     use RefreshDatabase;
 
     #[Test]
-    public function 可以申请重设密码连结(): void
+    public function 可以申請重設密碼連結(): void
     {
         Notification::fake();
         $user = User::factory()->create(['email' => 'forgot@example.com']);
@@ -29,7 +29,7 @@ final class PasswordResetTest extends TestCase
     }
 
     #[Test]
-    public function 邮箱不存在时回应相同讯息以防枚举(): void
+    public function 信箱不存在時回應相同訊息以防枚舉(): void
     {
         Notification::fake();
         User::factory()->create(['email' => 'exists@example.com']);
@@ -43,7 +43,7 @@ final class PasswordResetTest extends TestCase
     }
 
     #[Test]
-    public function 可以用有效token重设密码(): void
+    public function 可以用有效token重設密碼(): void
     {
         Notification::fake();
         $user = User::factory()->create(['email' => 'reset@example.com', 'password' => 'OldPass12345']);
@@ -68,7 +68,7 @@ final class PasswordResetTest extends TestCase
     }
 
     #[Test]
-    public function 无效token被拒绝(): void
+    public function 無效token被拒絕(): void
     {
         User::factory()->create(['email' => 'reset@example.com', 'password' => 'OldPass12345']);
 
@@ -81,7 +81,7 @@ final class PasswordResetTest extends TestCase
     }
 
     #[Test]
-    public function 重设密码会解除帐号锁定(): void
+    public function 重設密碼會解除帳號鎖定(): void
     {
         Notification::fake();
         $user = User::factory()->locked()->create([

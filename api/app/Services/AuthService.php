@@ -16,10 +16,10 @@ use Illuminate\Support\Facades\Hash;
 
 final class AuthService
 {
-    /** 连续失败几次触发锁定 */
+    /** 連續失敗幾次觸發鎖定 */
     public const MAX_FAILED_ATTEMPTS = 5;
 
-    /** 锁定时长（分钟） */
+    /** 鎖定時長（分鐘） */
     public const LOCK_MINUTES = 15;
 
     public function __construct(
@@ -28,9 +28,9 @@ final class AuthService
     ) {}
 
     /**
-     * 注册。
-     * 创建后立即寄验证信，但不阻断登入——未验证用户可以进站，
-     * 只是敏感操作（改邮箱等）会被 EnsureEmailIsVerified 拦下。
+     * 註冊。
+     * 建立後立即寄驗證信，但不阻斷登入——未驗證使用者可以進站，
+     * 只是敏感操作（改信箱等）會被 EnsureEmailIsVerified 攔下。
      *
      * @param  array{name: string, email: string, password: string}  $data
      */
@@ -40,10 +40,10 @@ final class AuthService
             $user = new User;
             $user->name = $data['name'];
             $user->email = mb_strtolower(trim($data['email']));
-            $user->password = $data['password']; // 由 casts 的 hashed 自动加密
+            $user->password = $data['password']; // 由 casts 的 hashed 自動加密
             $user->role = UserRole::Member;
             $user->status = UserStatus::Active;
-            // 注册即建立会话，等同一次登入，一并记下来源
+            // 註冊即建立會話，等同一次登入，一併記下來源
             $user->last_login_at = now();
             $user->last_login_ip = $this->audit->clientIp();
             $user->save();
@@ -60,22 +60,22 @@ final class AuthService
     }
 
     /**
-     * 验证帐号密码，但**不建立会话**。
+     * 驗證帳號密碼，但**不建立會話**。
      *
-     * 与 completeLogin() 分开是为了塞进双因素这一步：
-     * 密码对了只代表通过第一关，启用 2FA 的帐号还要再验一次验证码。
+     * 與 completeLogin() 分開是為了塞進雙因素這一步：
+     * 密碼對了只代表通過第一關，啟用 2FA 的帳號還要再驗一次驗證碼。
      *
-     * 防爆破分两层：
-     *  1) 路由上的 throttle middleware 按 IP + 邮箱限流，挡住高频扫号
-     *  2) 这里按帐号累计失败次数并锁定，换 IP 也绕不过
+     * 防爆破分兩層：
+     *  1) 路由上的 throttle middleware 按 IP + 信箱限流，擋住高頻掃號
+     *  2) 這裡按帳號累計失敗次數並鎖定，換 IP 也繞不過
      */
     public function attempt(string $email, string $password): User
     {
         $email = mb_strtolower(trim($email));
         $user = User::where('email', $email)->first();
 
-        // 帐号不存在时也走一次 Hash::check，让响应耗时与「密码错误」一致，
-        // 避免通过时间差探测邮箱是否已注册。
+        // 帳號不存在時也走一次 Hash::check，讓響應耗時與「密碼錯誤」一致，
+        // 避免通過時間差探測信箱是否已註冊。
         if ($user === null) {
             Hash::check($password, '$2y$12$usesomesillystringfore7hnbRJHxXVLeakoG8K30oukPsA.ztMG');
             $this->audit->log(AuditAction::LoginFailed, null, ['email' => $email, 'reason' => 'user_not_found']);
@@ -106,22 +106,22 @@ final class AuthService
     }
 
     /**
-     * 完成登入：建立会话并记录轨迹。
-     * 未启用 2FA 时紧接在 attempt() 之后呼叫；启用时则在验证码通过后才呼叫。
+     * 完成登入：建立會話並記錄軌跡。
+     * 未啟用 2FA 時緊接在 attempt() 之後呼叫；啟用時則在驗證碼通過後才呼叫。
      */
     public function completeLogin(User $user, bool $remember = false): void
     {
         $this->markLoginSuccess($user, $remember);
     }
 
-    /** 失败计数 +1，超阈值则锁定 */
+    /** 失敗計數 +1，超閾值則鎖定 */
     private function recordFailedAttempt(User $user): void
     {
         $user->failed_login_count++;
 
         if ($user->failed_login_count >= self::MAX_FAILED_ATTEMPTS) {
             $user->locked_until = now()->addMinutes(self::LOCK_MINUTES);
-            $user->failed_login_count = 0; // 锁定期结束后重新计数
+            $user->failed_login_count = 0; // 鎖定期結束後重新計數
             $user->save();
 
             $this->audit->log(AuditAction::AccountLocked, $user, [
@@ -146,7 +146,7 @@ final class AuthService
 
         Auth::guard('web')->login($user, $remember);
 
-        // 固定会话攻击防护：登入后换一个 session id
+        // 固定會話攻擊防護：登入後換一個 session id
         $this->request->session()->regenerate();
 
         $this->audit->log(AuditAction::LoginSuccess, $user);

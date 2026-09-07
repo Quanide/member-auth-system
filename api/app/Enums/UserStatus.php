@@ -8,17 +8,17 @@ enum UserStatus: string
 {
     /** 正常 */
     case Active = 'active';
-    /** 密码连续错误被系统临时锁定 */
+    /** 密碼連續錯誤被系統臨時鎖定 */
     case Locked = 'locked';
-    /** 管理员停权 */
+    /** 管理員停權 */
     case Disabled = 'disabled';
 
     public function label(): string
     {
         return match ($this) {
             self::Active => '正常',
-            self::Locked => '已锁定',
-            self::Disabled => '已停权',
+            self::Locked => '已鎖定',
+            self::Disabled => '已停權',
         };
     }
 

@@ -12,8 +12,8 @@ use Illuminate\Support\Facades\Log;
 use Throwable;
 
 /**
- * 审计日志写入。
- * 刻意吞掉异常：日志写失败不能反过来把业务主流程搞挂。
+ * 審計日誌寫入。
+ * 刻意吞掉異常：日誌寫失敗不能反過來把業務主流程搞掛。
  */
 final class AuditLogger
 {
@@ -33,7 +33,7 @@ final class AuditLogger
                 'meta' => $meta === [] ? null : $meta,
             ]);
         } catch (Throwable $e) {
-            Log::error('审计日志写入失败', [
+            Log::error('審計日誌寫入失敗', [
                 'action' => $action->value,
                 'user_id' => $user?->id,
                 'exception' => $e->getMessage(),
@@ -42,8 +42,8 @@ final class AuditLogger
     }
 
     /**
-     * 取客户端真实 IP。
-     * 反代场景需在 TrustProxies 中配置可信代理，否则 Laravel 不会采信 X-Forwarded-For。
+     * 取用戶端真實 IP。
+     * 反代場景需在 TrustProxies 中配置可信代理，否則 Laravel 不會採信 X-Forwarded-For。
      */
     public function clientIp(): ?string
     {

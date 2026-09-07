@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Support;
 
 /**
- * 前后端约定的错误码。
- * 用常量而非魔法字符串，改名时 IDE 能全局重构，也方便前端对照。
+ * 前後端約定的錯誤碼。
+ * 用常量而非魔法字符串，改名時 IDE 能全局重構，也方便前端對照。
  */
 final class ErrorCode
 {

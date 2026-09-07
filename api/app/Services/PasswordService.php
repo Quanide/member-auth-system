@@ -20,17 +20,17 @@ final class PasswordService
     public function __construct(private readonly AuditLogger $audit) {}
 
     /**
-     * 已登入状态下修改密码。
-     * 必须验证旧密码：防止有人捡到没锁屏的电脑就直接改掉密码。
+     * 已登入狀態下修改密碼。
+     * 必須驗證舊密碼：防止有人撿到沒鎖屏的電腦就直接改掉密碼。
      */
     public function change(User $user, string $currentPassword, string $newPassword): void
     {
         if (! Hash::check($currentPassword, $user->password)) {
             throw new DomainException(
                 ErrorCode::PASSWORD_MISMATCH,
-                '目前密码不正确',
+                '目前密碼不正確',
                 422,
-                ['current_password' => ['目前密码不正确']],
+                ['current_password' => ['目前密碼不正確']],
             );
         }
 
@@ -39,7 +39,7 @@ final class PasswordService
             $user->setRememberToken(Str::random(60));
             $user->save();
 
-            // 改密后踢掉其他装置的会话，只保留当前这台
+            // 改密後踢掉其他裝置的會話，只保留當前這臺
             $this->revokeOtherSessions($user);
         });
 
@@ -47,8 +47,8 @@ final class PasswordService
     }
 
     /**
-     * 发送重设密码邮件。
-     * 无论邮箱是否存在都返回相同结果，避免被用来枚举已注册邮箱。
+     * 發送重設密碼郵件。
+     * 無論信箱是否存在都返回相同結果，避免被用來枚舉已註冊信箱。
      */
     public function sendResetLink(string $email): void
     {
@@ -61,7 +61,7 @@ final class PasswordService
     }
 
     /**
-     * 用邮件里的 token 重设密码。
+     * 用郵件裡的 token 重設密碼。
      *
      * @param  array{email: string, token: string, password: string}  $data
      */
@@ -71,7 +71,7 @@ final class PasswordService
             $user->forceFill([
                 'password' => $password,
                 'remember_token' => Str::random(60),
-                // 能收到重设信即证明邮箱可用，顺手把锁定和失败计数清掉
+                // 能收到重設信即證明信箱可用，順手把鎖定和失敗計數清掉
                 'failed_login_count' => 0,
                 'locked_until' => null,
             ])->save();
@@ -86,14 +86,14 @@ final class PasswordService
         if ($status !== Password::PASSWORD_RESET) {
             throw new DomainException(
                 ErrorCode::INVALID_TOKEN,
-                '重设连结无效或已过期，请重新申请',
+                '重設連結無效或已過期，請重新申請',
                 422,
-                ['token' => ['重设连结无效或已过期，请重新申请']],
+                ['token' => ['重設連結無效或已過期，請重新申請']],
             );
         }
     }
 
-    /** 作废该用户除当前会话外的所有 session（session driver = database） */
+    /** 作廢該使用者除當前會話外的所有 session（session driver = database） */
     private function revokeOtherSessions(User $user): void
     {
         $currentId = session()->getId();
@@ -103,7 +103,7 @@ final class PasswordService
             ->where('id', '!=', $currentId)
             ->delete();
 
-        // Sanctum API token 一并作废
+        // Sanctum API token 一併作廢
         $user->tokens()->delete();
     }
 

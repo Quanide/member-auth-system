@@ -18,7 +18,7 @@ class UserFactory extends Factory
 {
     protected $model = User::class;
 
-    /** 全局复用同一个 hash，避免每条测试数据都跑一次 bcrypt 拖慢测试 */
+    /** 全局復用同一個 hash，避免每條測試數據都跑一次 bcrypt 拖慢測試 */
     private static ?string $passwordHash = null;
 
     /**
@@ -36,8 +36,8 @@ class UserFactory extends Factory
             'birthday' => fake()->optional()->dateTimeBetween('-60 years', '-18 years'),
             'gender' => fake()->optional()->randomElement(['male', 'female', 'other']),
             'bio' => fake()->optional()->sentence(),
-            // 显式给出：Model::shouldBeStrict() 下访问未载入的属性会抛异常，
-            // factory 少写一个欄位，测试里就会炸在毫不相干的地方。
+            // 顯式給出：Model::shouldBeStrict() 下訪問未載入的屬性會拋異常，
+            // factory 少寫一個欄位，測試裡就會炸在毫不相干的地方。
             'avatar_path' => null,
             'locked_until' => null,
             'failed_login_count' => 0,
@@ -67,7 +67,7 @@ class UserFactory extends Factory
         return $this->state(fn (): array => ['status' => UserStatus::Disabled]);
     }
 
-    /** 处于密码错误锁定期内 */
+    /** 處於密碼錯誤鎖定期內 */
     public function locked(): static
     {
         return $this->state(fn (): array => ['locked_until' => now()->addMinutes(15)]);

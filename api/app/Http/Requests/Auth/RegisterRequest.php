@@ -22,7 +22,7 @@ final class RegisterRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'min:2', 'max:50'],
             'email' => ['required', 'string', 'email:rfc,filter', 'max:255', 'unique:users,email'],
-            // confirmed 会自动比对 password_confirmation 字段
+            // confirmed 會自動比對 password_confirmation 欄位
             'password' => ['required', 'confirmed', Password::defaults()],
             'agree_terms' => ['accepted'],
         ];
@@ -35,9 +35,9 @@ final class RegisterRequest extends FormRequest
     {
         return [
             'name' => '姓名',
-            'email' => '邮箱',
-            'password' => '密码',
-            'agree_terms' => '服务条款',
+            'email' => '信箱',
+            'password' => '密碼',
+            'agree_terms' => '服務條款',
         ];
     }
 
@@ -47,15 +47,15 @@ final class RegisterRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'email.unique' => '此邮箱已被注册，可直接登入或找回密码',
-            'agree_terms.accepted' => '请先阅读并同意服务条款',
-            'password.confirmed' => '两次输入的密码不一致',
+            'email.unique' => '此信箱已被註冊，可直接登入或找回密碼',
+            'agree_terms.accepted' => '請先閱讀並同意服務條款',
+            'password.confirmed' => '兩次輸入的密碼不一致',
         ];
     }
 
     protected function prepareForValidation(): void
     {
-        // 邮箱统一小写，避免 A@x.com 与 a@x.com 注册出两个帐号
+        // 信箱統一小寫，避免 A@x.com 與 a@x.com 註冊出兩個帳號
         if (is_string($this->input('email'))) {
             $this->merge(['email' => mb_strtolower(trim($this->string('email')->value()))]);
         }

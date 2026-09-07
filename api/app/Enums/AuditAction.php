@@ -39,33 +39,33 @@ enum AuditAction: string
     public function label(): string
     {
         return match ($this) {
-            self::Register => '注册帐号',
+            self::Register => '註冊帳號',
             self::LoginSuccess => '登入成功',
-            self::LoginFailed => '登入失败',
+            self::LoginFailed => '登入失敗',
             self::Logout => '登出',
-            self::AccountLocked => '帐号被锁定',
-            self::EmailVerificationSent => '发送验证信',
-            self::EmailVerified => '邮箱验证通过',
-            self::PasswordResetRequested => '申请重设密码',
-            self::PasswordResetCompleted => '完成重设密码',
-            self::PasswordChanged => '修改密码',
-            self::ProfileUpdated => '修改会员资料',
-            self::AvatarUpdated => '更新头像',
-            self::AvatarRemoved => '移除头像',
-            self::EmailChangeRequested => '申请变更邮箱',
-            self::EmailChanged => '邮箱变更完成',
-            self::TwoFactorEnabled => '启用双因素认证',
-            self::TwoFactorDisabled => '关闭双因素认证',
-            self::TwoFactorChallengeFailed => '双因素验证失败',
-            self::TwoFactorRecoveryUsed => '使用恢复码登入',
-            self::TwoFactorRecoveryRegenerated => '重新产生恢复码',
-            self::SessionRevoked => '登出指定装置',
-            self::AllSessionsRevoked => '登出所有装置',
-            self::AccountDeleted => '注销帐号',
+            self::AccountLocked => '帳號被鎖定',
+            self::EmailVerificationSent => '發送驗證信',
+            self::EmailVerified => '信箱驗證通過',
+            self::PasswordResetRequested => '申請重設密碼',
+            self::PasswordResetCompleted => '完成重設密碼',
+            self::PasswordChanged => '修改密碼',
+            self::ProfileUpdated => '修改會員資料',
+            self::AvatarUpdated => '更新頭像',
+            self::AvatarRemoved => '移除頭像',
+            self::EmailChangeRequested => '申請變更信箱',
+            self::EmailChanged => '信箱變更完成',
+            self::TwoFactorEnabled => '啟用雙因素認證',
+            self::TwoFactorDisabled => '關閉雙因素認證',
+            self::TwoFactorChallengeFailed => '雙因素驗證失敗',
+            self::TwoFactorRecoveryUsed => '使用恢復碼登入',
+            self::TwoFactorRecoveryRegenerated => '重新產生恢復碼',
+            self::SessionRevoked => '登出指定裝置',
+            self::AllSessionsRevoked => '登出所有裝置',
+            self::AccountDeleted => '註銷帳號',
         };
     }
 
-    /** 前端用来上色：success / warning / danger / info */
+    /** 前端用來上色：success / warning / danger / info */
     public function level(): string
     {
         return match ($this) {

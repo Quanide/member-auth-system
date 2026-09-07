@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 /**
- * 审计日志：登入、改密、改资料等敏感动作留痕，供会员自查与管理端排查。
+ * 審計日誌：登入、改密、改資料等敏感動作留痕，供會員自查與管理端排查。
  */
 return new class extends Migration
 {
@@ -14,14 +14,14 @@ return new class extends Migration
         Schema::create('audit_logs', function (Blueprint $table) {
             $table->id();
 
-            // 用户被删除后日志仍需保留，因此用 nullOnDelete 而非级联删除
+            // 使用者被刪除後日誌仍需保留，因此用 nullOnDelete 而非級聯刪除
             $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
 
             $table->string('action', 40);
             $table->string('ip_address', 45)->nullable();
             $table->string('user_agent', 512)->nullable();
 
-            // 附加上下文：改了哪些字段、失败原因等
+            // 附加上下文：改了哪些欄位、失敗原因等
             $table->json('meta')->nullable();
 
             $table->timestamp('created_at')->useCurrent();

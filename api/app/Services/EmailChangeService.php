@@ -15,9 +15,9 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 /**
- * 变更邮箱走「双确认」：
- * 新地址验证通过前不动 users.email，
- * 用户填错也只是收不到信，不会把自己锁在门外。
+ * 變更信箱走「雙確認」：
+ * 新地址驗證通過前不動 users.email，
+ * 使用者填錯也只是收不到信，不會把自己鎖在門外。
  */
 final class EmailChangeService
 {
@@ -30,9 +30,9 @@ final class EmailChangeService
         if (! Hash::check($currentPassword, $user->password)) {
             throw new DomainException(
                 ErrorCode::PASSWORD_MISMATCH,
-                '目前密码不正确',
+                '目前密碼不正確',
                 422,
-                ['current_password' => ['目前密码不正确']],
+                ['current_password' => ['目前密碼不正確']],
             );
         }
 
@@ -41,26 +41,26 @@ final class EmailChangeService
         if ($newEmail === $user->email) {
             throw new DomainException(
                 ErrorCode::VALIDATION_FAILED,
-                '新邮箱与目前邮箱相同',
+                '新信箱與目前信箱相同',
                 422,
-                ['new_email' => ['新邮箱与目前邮箱相同']],
+                ['new_email' => ['新信箱與目前信箱相同']],
             );
         }
 
         if (User::where('email', $newEmail)->exists()) {
             throw new DomainException(
                 ErrorCode::EMAIL_TAKEN,
-                '此邮箱已被其他帐号使用',
+                '此信箱已被其他帳號使用',
                 422,
-                ['new_email' => ['此邮箱已被其他帐号使用']],
+                ['new_email' => ['此信箱已被其他帳號使用']],
             );
         }
 
-        // 明文 token 只出现在邮件里，库中存 SHA-256 摘要
+        // 明文 token 只出現在郵件裡，庫中存 SHA-256 摘要
         $token = Str::random(64);
 
         DB::transaction(function () use ($user, $newEmail, $token): void {
-            // 作废该用户之前未使用的申请，避免多封邮件同时有效
+            // 作廢該使用者之前未使用的申請，避免多封郵件同時有效
             EmailChangeRequest::where('user_id', $user->id)
                 ->whereNull('used_at')
                 ->update(['used_at' => now()]);
@@ -78,7 +78,7 @@ final class EmailChangeService
         $this->audit->log(AuditAction::EmailChangeRequested, $user, ['new_email' => $newEmail]);
     }
 
-    /** 点击新邮箱里的连结后落库 */
+    /** 點擊新信箱裡的連結後落庫 */
     public function confirm(string $token): User
     {
         $request = EmailChangeRequest::where('token_hash', hash('sha256', $token))->first();
@@ -86,18 +86,18 @@ final class EmailChangeService
         if ($request === null || ! $request->isUsable()) {
             throw new DomainException(
                 ErrorCode::INVALID_TOKEN,
-                '验证连结无效或已过期，请重新申请',
+                '驗證連結無效或已過期，請重新申請',
                 422,
             );
         }
 
         $user = $request->user;
 
-        // 申请期间该邮箱可能已被别人注册，落库前再查一次
+        // 申請期間該信箱可能已被別人註冊，落庫前再查一次
         if (User::where('email', $request->new_email)->whereKeyNot($user->id)->exists()) {
             throw new DomainException(
                 ErrorCode::EMAIL_TAKEN,
-                '此邮箱已被其他帐号使用',
+                '此信箱已被其他帳號使用',
                 422,
             );
         }

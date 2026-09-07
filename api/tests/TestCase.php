@@ -12,8 +12,8 @@ abstract class TestCase extends BaseTestCase
     {
         parent::setUp();
 
-        // Sanctum 的 SPA 模式靠 Origin/Referer 判定请求是否来自同源前端，
-        // 测试里补上这个头，走的才是真实生产路径（session cookie + CSRF），
+        // Sanctum 的 SPA 模式靠 Origin/Referer 判定請求是否來自同源前端，
+        // 測試裡補上這個頭，走的才是真實生產路徑（session cookie + CSRF），
         // 而不是退化成 token guard。
         $this->withHeaders([
             'Origin' => config('app.url'),

@@ -20,7 +20,7 @@ final class TwoFactorTest extends TestCase
         return (new Google2FA)->getCurrentOtp($user->fresh()->two_factor_secret);
     }
 
-    /** 走完整的产生 → 确认流程，回传恢复码 */
+    /** 走完整的產生 → 確認流程，回傳恢復碼 */
     private function enableFor(User $user): array
     {
         $this->actingAs($user)->postJson('/api/me/two-factor/generate')->assertOk();
@@ -31,10 +31,10 @@ final class TwoFactorTest extends TestCase
             ->json('data.recovery_codes');
     }
 
-    // ── 绑定流程 ──────────────────────────────────────
+    // ── 綁定流程 ──────────────────────────────────────
 
     #[Test]
-    public function 可以产生密钥与qrcode(): void
+    public function 可以產生密鑰與qrcode(): void
     {
         $user = User::factory()->create();
 
@@ -46,18 +46,18 @@ final class TwoFactorTest extends TestCase
     }
 
     #[Test]
-    public function 产生密钥后尚未启用(): void
+    public function 產生密鑰後尚未啟用(): void
     {
         $user = User::factory()->create();
 
         $this->actingAs($user)->postJson('/api/me/two-factor/generate')->assertOk();
 
-        // 只扫了码没验证就算启用的话，扫码失败的人会被锁在门外
+        // 只掃了碼沒驗證就算啟用的話，掃碼失敗的人會被鎖在門外
         $this->assertFalse($user->fresh()->hasTwoFactorEnabled());
     }
 
     #[Test]
-    public function 输入正确验证码后启用并取得恢复码(): void
+    public function 輸入正確驗證碼後啟用並取得恢復碼(): void
     {
         $user = User::factory()->create();
 
@@ -68,7 +68,7 @@ final class TwoFactorTest extends TestCase
     }
 
     #[Test]
-    public function 验证码错误时不会启用(): void
+    public function 驗證碼錯誤時不會啟用(): void
     {
         $user = User::factory()->create();
 
@@ -83,14 +83,14 @@ final class TwoFactorTest extends TestCase
     }
 
     #[Test]
-    public function 密钥与恢复码以加密储存(): void
+    public function 密鑰與恢復碼以加密儲存(): void
     {
         $user = User::factory()->create();
         $this->enableFor($user);
 
         $raw = DB::table('users')->where('id', $user->id)->first();
 
-        // 资料库里应该是密文，不能直接看到明文密钥
+        // 資料庫裡應該是密文，不能直接看到明文密鑰
         $this->assertNotSame($user->fresh()->two_factor_secret, $raw->two_factor_secret);
         $this->assertStringNotContainsString(
             $user->fresh()->two_factor_secret,
@@ -101,7 +101,7 @@ final class TwoFactorTest extends TestCase
     // ── 登入流程 ──────────────────────────────────────
 
     #[Test]
-    public function 启用后登入需要第二关验证(): void
+    public function 啟用後登入需要第二關驗證(): void
     {
         $user = User::factory()->create(['password' => 'Str0ngPass123']);
         $this->enableFor($user);
@@ -116,13 +116,13 @@ final class TwoFactorTest extends TestCase
 
         $this->assertTrue($response->json('data.two_factor_required'));
 
-        // 关键：此时还不算登入
+        // 關鍵：此時還不算登入
         $this->app['auth']->forgetGuards();
         $this->getJson('/api/me')->assertStatus(401);
     }
 
     #[Test]
-    public function 通过第二关后完成登入(): void
+    public function 通過第二關後完成登入(): void
     {
         $user = User::factory()->create(['password' => 'Str0ngPass123']);
         $this->enableFor($user);
@@ -143,7 +143,7 @@ final class TwoFactorTest extends TestCase
     }
 
     #[Test]
-    public function 第二关验证码错误时拒绝(): void
+    public function 第二關驗證碼錯誤時拒絕(): void
     {
         $user = User::factory()->create(['password' => 'Str0ngPass123']);
         $this->enableFor($user);
@@ -164,7 +164,7 @@ final class TwoFactorTest extends TestCase
     }
 
     #[Test]
-    public function 未先通过密码验证不能直接打第二关(): void
+    public function 未先通過密碼驗證不能直接打第二關(): void
     {
         $user = User::factory()->create();
         $this->enableFor($user);
@@ -172,13 +172,13 @@ final class TwoFactorTest extends TestCase
         $this->post('/api/auth/logout');
         $this->app['auth']->forgetGuards();
 
-        // 没有 pending 状态，直接送验证码应被拒绝
+        // 沒有 pending 狀態，直接送驗證碼應被拒絕
         $this->postJson('/api/auth/two-factor-challenge', ['code' => $this->currentCode($user)])
             ->assertStatus(401);
     }
 
     #[Test]
-    public function 恢复码可以登入且用后失效(): void
+    public function 恢復碼可以登入且用後失效(): void
     {
         $user = User::factory()->create(['password' => 'Str0ngPass123']);
         $codes = $this->enableFor($user);
@@ -196,7 +196,7 @@ final class TwoFactorTest extends TestCase
 
         $this->assertSame(7, $user->fresh()->recoveryCodesRemaining());
 
-        // 同一组恢复码不能重复使用
+        // 同一組恢復碼不能重複使用
         $this->post('/api/auth/logout');
         $this->app['auth']->forgetGuards();
 
@@ -208,10 +208,10 @@ final class TwoFactorTest extends TestCase
         $this->postJson('/api/auth/two-factor-challenge', ['code' => $code])->assertStatus(422);
     }
 
-    // ── 关闭与重产 ────────────────────────────────────
+    // ── 關閉與重產 ────────────────────────────────────
 
     #[Test]
-    public function 关闭双因素需要密码(): void
+    public function 關閉雙因素需要密碼(): void
     {
         $user = User::factory()->create(['password' => 'Str0ngPass123']);
         $this->enableFor($user);
@@ -230,7 +230,7 @@ final class TwoFactorTest extends TestCase
     }
 
     #[Test]
-    public function 可以重新产生恢复码且旧的失效(): void
+    public function 可以重新產生恢復碼且舊的失效(): void
     {
         $user = User::factory()->create(['password' => 'Str0ngPass123']);
         $oldCodes = $this->enableFor($user);

@@ -25,8 +25,8 @@ class User extends Authenticatable implements MustVerifyEmailContract
     use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
     /**
-     * 白名单只放会员本人可自助修改的资料字段。
-     * role / status / email / password 一律走专用方法赋值，杜绝批量赋值提权。
+     * 白名單只放會員本人可自助修改的資料欄位。
+     * role / status / email / password 一律走專用方法賦值，杜絕批量賦值提權。
      */
     protected $fillable = [
         'name',
@@ -55,13 +55,13 @@ class User extends Authenticatable implements MustVerifyEmailContract
             'role' => UserRole::class,
             'status' => UserStatus::class,
             'two_factor_confirmed_at' => 'datetime',
-            // 加密储存：资料库外泄也无法拿去产生有效的 TOTP 验证码
+            // 加密儲存：資料庫外洩也無法拿去產生有效的 TOTP 驗證碼
             'two_factor_secret' => 'encrypted',
             'two_factor_recovery_codes' => 'encrypted:array',
         ];
     }
 
-    // ── 关系 ─────────────────────────────────────────────
+    // ── 關係 ─────────────────────────────────────────────
 
     /** @return HasMany<AuditLog, $this> */
     public function auditLogs(): HasMany
@@ -75,7 +75,7 @@ class User extends Authenticatable implements MustVerifyEmailContract
         return $this->hasMany(EmailChangeRequest::class);
     }
 
-    // ── 头像 ─────────────────────────────────────────────
+    // ── 頭像 ─────────────────────────────────────────────
 
     public function avatarUrl(): ?string
     {
@@ -88,7 +88,7 @@ class User extends Authenticatable implements MustVerifyEmailContract
 
     // ── 通知 ─────────────────────────────────────────────
 
-    /** 覆写为中文文案版本 */
+    /** 覆寫為中文文案版本 */
     public function sendEmailVerificationNotification(): void
     {
         $this->notify(new VerifyEmailNotification);
@@ -99,20 +99,20 @@ class User extends Authenticatable implements MustVerifyEmailContract
         $this->notify(new ResetPasswordNotification($token));
     }
 
-    // ── 状态判断 ──────────────────────────────────────────
+    // ── 狀態判斷 ──────────────────────────────────────────
 
     public function isAdmin(): bool
     {
         return $this->role === UserRole::Admin;
     }
 
-    /** 是否处于「密码错误过多」的临时锁定期内 */
+    /** 是否處於「密碼錯誤過多」的臨時鎖定期內 */
     public function isTemporarilyLocked(): bool
     {
         return $this->locked_until !== null && $this->locked_until->isFuture();
     }
 
-    /** 锁定还剩多少秒，前端据此提示 */
+    /** 鎖定還剩多少秒，前端據此提示 */
     public function lockRemainingSeconds(): int
     {
         if (! $this->isTemporarilyLocked()) {
@@ -122,13 +122,13 @@ class User extends Authenticatable implements MustVerifyEmailContract
         return max(1, (int) Carbon::now()->diffInSeconds($this->locked_until, absolute: true));
     }
 
-    /** 是否已完成双因素绑定（产生密钥但没确认不算） */
+    /** 是否已完成雙因素綁定（產生密鑰但沒確認不算） */
     public function hasTwoFactorEnabled(): bool
     {
         return $this->two_factor_confirmed_at !== null && $this->two_factor_secret !== null;
     }
 
-    /** 还剩几组恢复码可用 */
+    /** 還剩幾組恢復碼可用 */
     public function recoveryCodesRemaining(): int
     {
         return is_array($this->two_factor_recovery_codes)
@@ -141,7 +141,7 @@ class User extends Authenticatable implements MustVerifyEmailContract
         return $this->status->canLogin() && ! $this->isTemporarilyLocked();
     }
 
-    /** 显示用名称：优先昵称 */
+    /** 顯示用名稱：優先暱稱 */
     public function displayName(): string
     {
         return $this->nickname !== null && $this->nickname !== ''
